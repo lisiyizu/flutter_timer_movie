@@ -1,4 +1,4 @@
-class R {
+class Resource {
   static var _imageRoot = 'assets/images/';
   static var fontFamilyDancingScript = 'DancingScript';
   static var imageAppIcon = '${_imageRoot}app_icon.png';

@@ -1,7 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_timer_movie/application.dart';
-import 'package:flutter_timer_movie/r.dart';
+import 'package:flutter_timer_movie/resource.dart';
 import 'package:flutter_timer_movie/routers/routers.dart';
 
 class SplashPage extends StatelessWidget {
@@ -15,7 +15,7 @@ class SplashPage extends StatelessWidget {
     return Scaffold(
       body: Container(
         alignment: Alignment.center,
-        child: Image.asset(R.imageAppLogo, width: 250, height: 250),
+        child: Image.asset(Resource.imageAppLogo, width: 250, height: 250),
       ),
     );
   }

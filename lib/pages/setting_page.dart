@@ -2,7 +2,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_timer_movie/application.dart';
-import 'package:flutter_timer_movie/r.dart';
+import 'package:flutter_timer_movie/resource.dart';
 import 'package:flutter_timer_movie/routers/routers.dart';
 
 typedef void MenuAction();
@@ -22,7 +22,7 @@ class SettingPage extends StatelessWidget {
                 title: Text(title,
                     style: TextStyle(
                       fontSize: 30.0,
-                      fontFamily: R.fontFamilyDancingScript,
+                      fontFamily: Resource.fontFamilyDancingScript,
                     ))),
             body: Container(
               child: ListView(

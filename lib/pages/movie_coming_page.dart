@@ -1,16 +1,17 @@
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_timer_movie/application.dart';
+import 'package:flutter_timer_movie/entities/movie_coming_entity.dart';
 import 'package:flutter_timer_movie/networks/http_utils.dart';
 import 'package:flutter_timer_movie/networks/network_configs.dart';
-import 'package:flutter_timer_movie/r.dart';
+import 'package:flutter_timer_movie/pages/movie_detail.dart';
+import 'package:flutter_timer_movie/resource.dart';
 import 'package:flutter_timer_movie/utils/logger.dart';
-import 'package:flutter_timer_movie/entities/movie_coming_entity.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/cupertino.dart';
 
 class MovieComingPage extends StatefulWidget {
   @override
@@ -104,7 +105,18 @@ class _MovieComingPageState extends State<MovieComingPage> with AutomaticKeepAli
                         child: _movieWidget(index, color),
                       ),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      MovieInfo movie = _allInfo[index] as MovieInfo;
+
+                      /// fluro 不支持直接传递中文，需要先编码再传递，获取后再解码，未解决
+//                      Application.router.navigateTo(context,
+//                          '${Routers.movieDetails}?movieId=${movie.id}&movieName=${ConvertUtils.cnEncode(movie.title)}',
+//                          transition: TransitionType.fadeIn);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MovieDetail(movieId: movie.id, movieName: movie.title)));
+                    },
                   )));
   }
 
@@ -117,7 +129,7 @@ class _MovieComingPageState extends State<MovieComingPage> with AutomaticKeepAli
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         movie.image.isEmpty
-            ? Image.asset(R.imageFail, width: 70.0, height: 90.0, fit: BoxFit.contain)
+            ? Image.asset(Resource.imageFail, width: 70.0, height: 90.0, fit: BoxFit.contain)
             : CachedNetworkImage(
                 imageUrl: movie.image,
                 width: 70.0,
@@ -125,8 +137,8 @@ class _MovieComingPageState extends State<MovieComingPage> with AutomaticKeepAli
                 fit: BoxFit.contain,
                 placeholder: (context, string) => Container(
                     height: 90.0, width: 70.0, alignment: Alignment.center, child: CupertinoActivityIndicator()),
-                errorWidget: (context, string, e) =>
-                    Container(height: 90.0, width: 70.0, alignment: Alignment.center, child: Image.asset(R.imageFail)),
+                errorWidget: (context, string, e) => Container(
+                    height: 90.0, width: 70.0, alignment: Alignment.center, child: Image.asset(Resource.imageFail)),
               ),
         Expanded(
             child: Padding(

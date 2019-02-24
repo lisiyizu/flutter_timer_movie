@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_timer_movie/app_component.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_timer_movie/movie_app.dart';
 
 void main() {
   runApp(MovieApp());

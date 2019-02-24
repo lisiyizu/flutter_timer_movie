@@ -1,6 +1,6 @@
 import 'package:fluro/fluro.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_timer_movie/utils/logger.dart';
+
 import 'router_handlers.dart';
 
 class Routers {
@@ -11,15 +11,18 @@ class Routers {
   static var _logger = Logger('Routers');
 
   static void configureRouters(Router router) {
-    router.notFoundHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    router.notFoundHandler = Handler(handlerFunc: (_, Map<String, List<String>> params) {
       _logger.log('Page Not Found');
+      _logger.log(params);
     });
 
     // splash
     router.define(root, handler: rootHandler);
     // home
     router.define(home, handler: homeHandler);
-    // theme page
+    // theme
     router.define(appTheme, handler: appThemeHandler);
+    // movie detail
+    router.define(movieDetails, handler: movieDetailHandler);
   }
 }

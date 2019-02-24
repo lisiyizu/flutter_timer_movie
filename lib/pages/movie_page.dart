@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_timer_movie/application.dart';
 import 'package:flutter_timer_movie/pages/movie_coming_page.dart';
 import 'package:flutter_timer_movie/pages/movie_on_page.dart';
-import 'package:flutter_timer_movie/r.dart';
+import 'package:flutter_timer_movie/resource.dart';
 import 'package:flutter_timer_movie/utils/logger.dart';
 
 class MoviePage extends StatefulWidget {
@@ -76,7 +76,7 @@ class _MoviePageState extends State<MoviePage> with SingleTickerProviderStateMix
                   title: Text(widget.title,
                       style: TextStyle(
                         fontSize: 30.0,
-                        fontFamily: R.fontFamilyDancingScript,
+                        fontFamily: Resource.fontFamilyDancingScript,
                       )),
                   bottom: TabBar(
                     controller: _tabController,

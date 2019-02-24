@@ -1,17 +1,17 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_timer_movie/networks/http_utils.dart';
-import 'package:flutter_timer_movie/networks/network_configs.dart';
-import 'package:flutter_timer_movie/r.dart';
-import 'package:flutter_timer_movie/utils/logger.dart';
-import 'package:flutter_timer_movie/entities/movie_on_entity.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:flutter_timer_movie/application.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_timer_movie/application.dart';
+import 'package:flutter_timer_movie/entities/movie_on_entity.dart';
+import 'package:flutter_timer_movie/networks/http_utils.dart';
+import 'package:flutter_timer_movie/networks/network_configs.dart';
+import 'package:flutter_timer_movie/resource.dart';
+import 'package:flutter_timer_movie/utils/logger.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class MovieOnPage extends StatefulWidget {
   @override
@@ -105,7 +105,7 @@ class _MovieOnPageState extends State<MovieOnPage> with AutomaticKeepAliveClient
           placeholder: (context, string) =>
               Container(height: 110.0, width: 70.0, alignment: Alignment.center, child: CupertinoActivityIndicator()),
           errorWidget: (context, string, e) =>
-              Container(height: 110.0, width: 70.0, alignment: Alignment.center, child: Image.asset(R.imageFail)),
+              Container(height: 110.0, width: 70.0, alignment: Alignment.center, child: Image.asset(Resource.imageFail)),
         ),
 
         /// 影片信息
