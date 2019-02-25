@@ -23,5 +23,5 @@ var appThemeHandler = Handler(handlerFunc: (_, Map<String, dynamic> params) {
 var movieDetailHandler = Handler(handlerFunc: (_, Map<String, List<String>> params) {
   String id = params['movieId']?.first;
   String movieName = params['movieName']?.first;
-  return MovieDetail(movieId: int.parse(id), movieName: ConvertUtils.cnDecode(movieName));
+  return MovieDetail(movieId: int.parse(id), movieName: ConvertUtils.fluroCnParamsDecode(movieName));
 });

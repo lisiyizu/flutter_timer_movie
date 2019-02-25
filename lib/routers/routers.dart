@@ -25,4 +25,8 @@ class Routers {
     // movie detail
     router.define(movieDetails, handler: movieDetailHandler);
   }
+
+  static String generateHomePath(String title) => '$home?title=$title';
+
+  static String generateDetailPath(int id, String name) => '$movieDetails?movieId=$id&movieName=$name';
 }

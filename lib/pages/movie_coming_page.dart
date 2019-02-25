@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,8 +10,9 @@ import 'package:flutter_timer_movie/application.dart';
 import 'package:flutter_timer_movie/entities/movie_coming_entity.dart';
 import 'package:flutter_timer_movie/networks/http_utils.dart';
 import 'package:flutter_timer_movie/networks/network_configs.dart';
-import 'package:flutter_timer_movie/pages/movie_detail.dart';
 import 'package:flutter_timer_movie/resource.dart';
+import 'package:flutter_timer_movie/routers/routers.dart';
+import 'package:flutter_timer_movie/utils/convert_utils.dart';
 import 'package:flutter_timer_movie/utils/logger.dart';
 
 class MovieComingPage extends StatefulWidget {
@@ -108,14 +110,10 @@ class _MovieComingPageState extends State<MovieComingPage> with AutomaticKeepAli
                     onTap: () {
                       MovieInfo movie = _allInfo[index] as MovieInfo;
 
-                      /// fluro 不支持直接传递中文，需要先编码再传递，获取后再解码，未解决
-//                      Application.router.navigateTo(context,
-//                          '${Routers.movieDetails}?movieId=${movie.id}&movieName=${ConvertUtils.cnEncode(movie.title)}',
-//                          transition: TransitionType.fadeIn);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MovieDetail(movieId: movie.id, movieName: movie.title)));
+                      /// fluro 不支持直接传递中文，需要先编码再传递，获取后再解码
+                      Application.router.navigateTo(
+                          context, Routers.generateDetailPath(movie.id, ConvertUtils.fluroCnParamsEncode(movie.title)),
+                          transition: TransitionType.fadeIn);
                     },
                   )));
   }

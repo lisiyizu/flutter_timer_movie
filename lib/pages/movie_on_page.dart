@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,8 @@ import 'package:flutter_timer_movie/entities/movie_on_entity.dart';
 import 'package:flutter_timer_movie/networks/http_utils.dart';
 import 'package:flutter_timer_movie/networks/network_configs.dart';
 import 'package:flutter_timer_movie/resource.dart';
+import 'package:flutter_timer_movie/routers/routers.dart';
+import 'package:flutter_timer_movie/utils/convert_utils.dart';
 import 'package:flutter_timer_movie/utils/logger.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
@@ -87,7 +90,11 @@ class _MovieOnPageState extends State<MovieOnPage> with AutomaticKeepAliveClient
                 child: _movieWidget(movie, color),
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              Application.router.navigateTo(
+                  context, Routers.generateDetailPath(movie.movieId, ConvertUtils.fluroCnParamsEncode(movie.tCn)),
+                  transition: TransitionType.fadeIn);
+            },
           )),
     );
   }
@@ -104,8 +111,8 @@ class _MovieOnPageState extends State<MovieOnPage> with AutomaticKeepAliveClient
           fit: BoxFit.contain,
           placeholder: (context, string) =>
               Container(height: 110.0, width: 70.0, alignment: Alignment.center, child: CupertinoActivityIndicator()),
-          errorWidget: (context, string, e) =>
-              Container(height: 110.0, width: 70.0, alignment: Alignment.center, child: Image.asset(Resource.imageFail)),
+          errorWidget: (context, string, e) => Container(
+              height: 110.0, width: 70.0, alignment: Alignment.center, child: Image.asset(Resource.imageFail)),
         ),
 
         /// 影片信息
