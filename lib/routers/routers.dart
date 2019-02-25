@@ -1,5 +1,5 @@
 import 'package:fluro/fluro.dart';
-import 'package:flutter_timer_movie/utils/logger.dart';
+import '../utils/logger.dart';
 
 import 'router_handlers.dart';
 

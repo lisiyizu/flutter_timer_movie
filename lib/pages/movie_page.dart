@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_timer_movie/application.dart';
-import 'package:flutter_timer_movie/pages/movie_coming_page.dart';
-import 'package:flutter_timer_movie/pages/movie_on_page.dart';
-import 'package:flutter_timer_movie/resource.dart';
-import 'package:flutter_timer_movie/utils/logger.dart';
+import '../application.dart';
+import '../pages/movie_coming_page.dart';
+import '../pages/movie_on_page.dart';
+import '../resource.dart';
+import '../utils/logger.dart';
 
 class MoviePage extends StatefulWidget {
   final title;

@@ -1,9 +1,9 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_timer_movie/application.dart';
-import 'package:flutter_timer_movie/bloc/theme_bloc.dart';
-import 'package:flutter_timer_movie/routers/routers.dart';
-import 'package:flutter_timer_movie/utils/preference_utils.dart';
+import 'application.dart';
+import 'bloc/theme_bloc.dart';
+import 'routers/routers.dart';
+import 'utils/preference_utils.dart';
 
 class MovieApp extends StatefulWidget {
   @override

@@ -1,9 +1,9 @@
 import 'package:fluro/fluro.dart';
-import 'package:flutter_timer_movie/pages/home_page.dart';
-import 'package:flutter_timer_movie/pages/movie_detail.dart';
-import 'package:flutter_timer_movie/pages/splash_page.dart';
-import 'package:flutter_timer_movie/pages/theme_page.dart';
-import 'package:flutter_timer_movie/utils/convert_utils.dart';
+import '../pages/home_page.dart';
+import '../pages/movie_detail.dart';
+import '../pages/splash_page.dart';
+import '../pages/theme_page.dart';
+import '../utils/convert_utils.dart';
 
 var rootHandler = Handler(handlerFunc: (_, Map<String, List<String>> params) {
   return SplashPage();

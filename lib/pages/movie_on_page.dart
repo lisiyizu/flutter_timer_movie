@@ -6,14 +6,14 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_timer_movie/application.dart';
-import 'package:flutter_timer_movie/entities/movie_on_entity.dart';
-import 'package:flutter_timer_movie/networks/http_utils.dart';
-import 'package:flutter_timer_movie/networks/network_configs.dart';
-import 'package:flutter_timer_movie/resource.dart';
-import 'package:flutter_timer_movie/routers/routers.dart';
-import 'package:flutter_timer_movie/utils/convert_utils.dart';
-import 'package:flutter_timer_movie/utils/logger.dart';
+import '../application.dart';
+import '../entities/movie_on_entity.dart';
+import '../networks/http_utils.dart';
+import '../networks/network_configs.dart';
+import '../resource.dart';
+import '../routers/routers.dart';
+import '../utils/convert_utils.dart';
+import '../utils/logger.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class MovieOnPage extends StatefulWidget {
