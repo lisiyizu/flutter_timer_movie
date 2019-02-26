@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../application.dart';
 import '../bloc/theme_bloc.dart';
 import '../utils/preference_utils.dart';

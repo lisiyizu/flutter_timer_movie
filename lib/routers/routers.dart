@@ -1,6 +1,6 @@
 import 'package:fluro/fluro.dart';
-import '../utils/logger.dart';
 
+import '../utils/logger.dart';
 import 'router_handlers.dart';
 
 class Routers {

@@ -6,6 +6,8 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
+
 import '../application.dart';
 import '../entities/movie_on_entity.dart';
 import '../networks/http_utils.dart';
@@ -14,7 +16,6 @@ import '../resource.dart';
 import '../routers/routers.dart';
 import '../utils/convert_utils.dart';
 import '../utils/logger.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class MovieOnPage extends StatefulWidget {
   @override
@@ -73,7 +74,7 @@ class _MovieOnPageState extends State<MovieOnPage> with AutomaticKeepAliveClient
 
   Future<MovieOnEntity> _requestMovies(int locationId) async {
     Response response = await HttpUtils.instance.get(NetworkConfigs.movieOn, params: {'locationId': locationId});
-    return response == null ? null : MovieOnEntity.fromMap(response.data);
+    return response == null ? null : MovieOnEntity.fromMap(response.data) ?? null;
   }
 
   Widget _buildMovieItem(BuildContext context, int index, Color color) {

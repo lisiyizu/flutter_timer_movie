@@ -1,16 +1,17 @@
-import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import '../resource.dart';
+
 import '../application.dart';
-import '../utils/logger.dart';
-import '../networks/http_utils.dart';
-import '../networks/network_configs.dart';
 import '../entities/comment_entity.dart';
 import '../entities/movie_detail_entity.dart';
+import '../networks/http_utils.dart';
+import '../networks/network_configs.dart';
+import '../resource.dart';
+import '../utils/logger.dart';
 
 class MovieDetail extends StatefulWidget {
   final int movieId;
@@ -68,12 +69,12 @@ class _MovieDetailState extends State<MovieDetail> {
   Future<MovieDetailEntity> _requestMovie(int locationId) async {
     Response response = await HttpUtils.instance
         .get(NetworkConfigs.movieDetail, params: {'locationId': locationId, 'movieId': widget.movieId});
-    return response == null ? null : MovieDetailEntity.fromMap(response.data);
+    return response == null ? null : MovieDetailEntity.fromMap(response.data) ?? null;
   }
 
   Future<CommentEntity> _requestComments() async {
     Response response = await HttpUtils.instance.get(NetworkConfigs.movieComment, params: {'movieId': widget.movieId});
-    return response == null ? null : CommentEntity.fromMap(response.data);
+    return response == null ? null : CommentEntity.fromMap(response.data) ?? null;
   }
 
   Widget _buildPersonItem(String image, String name, String desc) {
@@ -113,8 +114,8 @@ class _MovieDetailState extends State<MovieDetail> {
             ? Text('演\n员', style: TextStyle(color: color, fontSize: 14.0))
             : Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: _buildPersonItem(
-                    actor.img, actor.name.isNotEmpty ? actor.name : actor.nameEn, '饰${actor.roleName}'),
+                child: _buildPersonItem(actor.img, actor.name.isNotEmpty ? actor.name : actor.nameEn,
+                    actor.roleName.isNotEmpty ? '饰${actor.roleName}' : null),
               ));
   }
 

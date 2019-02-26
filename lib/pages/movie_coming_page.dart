@@ -6,6 +6,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../application.dart';
 import '../entities/movie_coming_entity.dart';
 import '../networks/http_utils.dart';
@@ -77,7 +78,7 @@ class _MovieComingPageState extends State<MovieComingPage> with AutomaticKeepAli
 
   Future<MovieComingsEntity> _requestMovies(int locationId) async {
     Response response = await HttpUtils.instance.get(NetworkConfigs.movieComing, params: {'locationId': locationId});
-    return response == null ? null : MovieComingsEntity.fromMap(response.data);
+    return response == null ? null : MovieComingsEntity.fromMap(response.data) ?? null;
   }
 
   @override

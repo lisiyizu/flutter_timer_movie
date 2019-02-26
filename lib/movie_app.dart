@@ -1,7 +1,10 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'application.dart';
 import 'bloc/theme_bloc.dart';
+import 'locale/movie_localizations.dart';
 import 'routers/routers.dart';
 import 'utils/preference_utils.dart';
 
@@ -31,6 +34,12 @@ class _MovieAppState extends State<MovieApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.lightBlue),
       onGenerateRoute: Application.router.generator,
+      localizationsDelegates: [
+        MovieLocalizationsDelegate.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: const <Locale>[const Locale('en', 'US'), const Locale('zh', 'CH')],
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:fluro/fluro.dart';
+
 import '../pages/home_page.dart';
 import '../pages/movie_detail.dart';
 import '../pages/splash_page.dart';
