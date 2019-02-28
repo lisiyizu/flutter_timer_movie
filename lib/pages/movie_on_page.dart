@@ -50,16 +50,6 @@ class _MovieOnPageState extends State<MovieOnPage> with AutomaticKeepAliveClient
     super.dispose();
   }
 
-  @override
-  void didUpdateWidget(MovieOnPage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
   _request({bool isRefresh = false}) async {
     if (!_isLoading) {
       setState(() => _isLoading = true);
@@ -90,9 +80,8 @@ class _MovieOnPageState extends State<MovieOnPage> with AutomaticKeepAliveClient
             child: Card(
               clipBehavior: Clip.antiAliasWithSaveLayer,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                child: _movieWidget(movie, color),
-              ),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                  child: MovieWidget(movie: movie, color: color)),
             ),
             onTap: () {
               Application.router.navigateTo(
@@ -100,76 +89,6 @@ class _MovieOnPageState extends State<MovieOnPage> with AutomaticKeepAliveClient
                   transition: TransitionType.fadeIn);
             },
           )),
-    );
-  }
-
-  Widget _movieWidget(MsListBean movie, Color color) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        /// 剧照
-        CachedNetworkImage(
-          imageUrl: movie.img,
-          width: 70.0,
-          height: 110.0,
-          fit: BoxFit.contain,
-          placeholder: (context, string) =>
-              Container(height: 110.0, width: 70.0, alignment: Alignment.center, child: CupertinoActivityIndicator()),
-          errorWidget: (context, string, e) => Container(
-              height: 110.0, width: 70.0, alignment: Alignment.center, child: Image.asset(Resource.imageFail)),
-        ),
-
-        /// 影片信息
-        Expanded(
-            child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(movie.tCn,
-                  style: TextStyle(fontSize: 15.0, color: Colors.black87, fontWeight: FontWeight.bold),
-                  overflow: TextOverflow.ellipsis),
-              Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: Row(children: <Widget>[
-                    SmoothStarRating(
-                        starCount: 5,
-                        rating: movie.r / 2,
-                        color: Colors.deepOrange,
-                        size: 12.0,
-                        borderColor: Colors.deepOrange),
-                    Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: Text(movie.r == -1.0 ? '暂无评分' : '${movie.r}分', style: TextStyle(fontSize: 10.0)))
-                  ])),
-              Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: Text('导演: ${movie.dN}', style: TextStyle(fontSize: 10.0), overflow: TextOverflow.ellipsis)),
-              Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child:
-                      Text('主演: ${movie.actors}', style: TextStyle(fontSize: 10.0), overflow: TextOverflow.ellipsis)),
-              Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: Text('简介: ${movie.commonSpecial.isEmpty ? '暂无' : movie.commonSpecial}',
-                      style: TextStyle(fontSize: 10.0), overflow: TextOverflow.ellipsis)),
-              Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child:
-                      Text('分类: ${movie.movieType}', style: TextStyle(fontSize: 10.0), overflow: TextOverflow.ellipsis))
-            ],
-          ),
-        )),
-
-        /// 查看详情
-        DecoratedBox(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(4.0)), border: Border.all(width: 1.0, color: color)),
-          child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
-              child: Text('查看\n详情', style: TextStyle(fontSize: 12.0, color: color))),
-        )
-      ],
     );
   }
 
@@ -206,5 +125,92 @@ class _MovieOnPageState extends State<MovieOnPage> with AutomaticKeepAliveClient
                         _scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.decelerate);
                       }),
             )));
+  }
+}
+
+/// 电影介绍
+class MovieWidget extends StatelessWidget {
+  final MsListBean movie;
+  final Color color;
+
+  MovieWidget({Key key, this.movie, this.color}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        /// 剧照
+        CachedNetworkImage(
+          imageUrl: movie.img,
+          width: 70.0,
+          height: 110.0,
+          fit: BoxFit.contain,
+          placeholder: (context, string) =>
+              Container(height: 110.0, width: 70.0, alignment: Alignment.center, child: CupertinoActivityIndicator()),
+          errorWidget: (context, string, e) => Container(
+              height: 110.0, width: 70.0, alignment: Alignment.center, child: Image.asset(Resource.imageFail)),
+        ),
+
+        /// 影片信息
+        Expanded(
+            child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+          child: MovieIntroduceWidget(movie: movie, color: color),
+        )),
+
+        /// 查看详情
+        DecoratedBox(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(4.0)), border: Border.all(width: 1.0, color: color)),
+          child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
+              child: Text('查看\n详情', style: TextStyle(fontSize: 12.0, color: color))),
+        )
+      ],
+    );
+  }
+}
+
+/// 影片信息
+class MovieIntroduceWidget extends StatelessWidget {
+  final MsListBean movie;
+  final Color color;
+
+  MovieIntroduceWidget({Key key, this.movie, this.color}) : super(key: key);
+
+  Widget _buildIntroduceContent(String content) {
+    return Padding(
+        padding: const EdgeInsets.only(top: 4.0),
+        child: Text(content, style: TextStyle(fontSize: 10.0), overflow: TextOverflow.ellipsis));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(movie.tCn,
+            style: TextStyle(fontSize: 15.0, color: Colors.black87, fontWeight: FontWeight.bold),
+            overflow: TextOverflow.ellipsis),
+        Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: Row(children: <Widget>[
+              SmoothStarRating(
+                  starCount: 5,
+                  rating: movie.r / 2,
+                  color: Colors.deepOrange,
+                  size: 12.0,
+                  borderColor: Colors.deepOrange),
+              Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Text(movie.r == -1.0 ? '暂无评分' : '${movie.r}分', style: TextStyle(fontSize: 10.0)))
+            ])),
+        _buildIntroduceContent('导演: ${movie.dN}'),
+        _buildIntroduceContent('主演: ${movie.actors}'),
+        _buildIntroduceContent('简介: ${movie.commonSpecial.isEmpty ? '暂无' : movie.commonSpecial}'),
+        _buildIntroduceContent('分类: ${movie.movieType}')
+      ],
+    );
   }
 }

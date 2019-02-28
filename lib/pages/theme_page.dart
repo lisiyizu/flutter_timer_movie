@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../application.dart';
 import '../bloc/theme_bloc.dart';
+import '../locale/app_localizations.dart';
 import '../utils/preference_utils.dart';
 
 class ThemePage extends StatelessWidget {
@@ -22,7 +23,7 @@ class ThemePage extends StatelessWidget {
             data: ThemeData(primarySwatch: color, iconTheme: IconThemeData(color: color)),
             child: Scaffold(
               appBar: AppBar(
-                title: Text('主题'),
+                title: Text(AppLocalizations.of(context).text('theme')),
               ),
               body: Container(
                 child: CustomScrollView(
@@ -36,7 +37,8 @@ class ThemePage extends StatelessWidget {
                         children: <Widget>[
                           Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: Text('当前主题色', style: TextStyle(fontSize: 20.0, color: color))),
+                              child: Text(AppLocalizations.of(context).text('current_theme'),
+                                  style: TextStyle(fontSize: 20.0, color: color))),
                           Container(color: color, width: 40.0, height: 40.0)
                         ],
                       ),

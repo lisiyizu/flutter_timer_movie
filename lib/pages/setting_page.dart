@@ -31,7 +31,7 @@ class SettingPage extends StatelessWidget {
                 children: <Widget>[
                   SettingMenu(
                       icon: Icons.color_lens,
-                      title: '主题',
+                      title: AppLocalizations.of(context).text('theme'),
                       color: color,
                       action: () {
                         Application.router.navigateTo(context, Routers.appTheme, transition: TransitionType.fadeIn);

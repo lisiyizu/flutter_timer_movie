@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../application.dart';
+import '../locale/app_localizations.dart';
 import '../pages/movie_page.dart';
 import '../pages/setting_page.dart';
 import '../utils/logger.dart';
@@ -52,8 +53,10 @@ class _HomePageState extends State<HomePage> {
                 body: IndexedStack(children: _pages, index: _index),
                 bottomNavigationBar: BottomNavigationBar(
                   items: [
-                    BottomNavigationBarItem(icon: Icon(Icons.movie), title: Text('电影')),
-                    BottomNavigationBarItem(icon: Icon(Icons.settings), title: Text('设置'))
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.movie), title: Text(AppLocalizations.of(context).text('movie'))),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.settings), title: Text(AppLocalizations.of(context).text('settings')))
                   ],
                   currentIndex: _index,
                   iconSize: 26.0,

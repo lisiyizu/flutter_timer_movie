@@ -1,3 +1,9 @@
 {
-  "home_title": "Timer"
+  "home_title": "Timer",
+  "movie": "Movie",
+  "settings": "Settings",
+  "hot_casting": "HotCasting",
+  "coming_soon": "ComingSoon",
+  "theme": "Themes",
+  "current_theme": "CurrentTheme"
 }

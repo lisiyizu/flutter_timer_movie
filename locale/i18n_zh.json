@@ -1,3 +1,9 @@
 {
-  "home_title": "Timer Movies"
+  "home_title": "Timer Movies",
+  "movie": "电影",
+  "settings": "设置",
+  "hot_casting": "正在热播",
+  "coming_soon": "即将上映",
+  "theme": "主题",
+  "current_theme": "当前主题色"
 }

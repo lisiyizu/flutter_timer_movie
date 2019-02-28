@@ -17,6 +17,8 @@ import '../networks/network_configs.dart';
 import '../resource.dart';
 import '../utils/logger.dart';
 
+typedef void CategoryGuideAction();
+
 class MovieDetail extends StatefulWidget {
   final int movieId;
   final String movieName;
@@ -105,7 +107,184 @@ class _MovieDetailState extends State<MovieDetail> {
         : MovieStillsEntity.fromMap((response.data is String) ? json.decode(response.data) : response.data) ?? null;
   }
 
-  Widget _buildPersonItem(String image, String name, String desc) {
+  /// 演员
+  Widget _buildActorItems(int index, Color color) {
+    var actor = index != 0 ? _detail.basic.actors[index - 1] : null;
+    return Container(
+        child: index == 0
+            ? Text('演\n员', style: TextStyle(color: color, fontSize: 14.0))
+            : Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: PersonIntroduce(
+                    image: actor.img,
+                    name: actor.name.isNotEmpty ? actor.name : actor.nameEn,
+                    desc: actor.roleName.isNotEmpty ? '饰${actor.roleName}' : null),
+              ));
+  }
+
+  /// 短评
+  Widget _buildMiniCommentItems(BuildContext context, int index) {
+    var detail = _miniComments[index];
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12.0),
+        child: CommentWidget(
+            nick: detail.nickname,
+            ava: detail.headImg,
+            date: detail.commentDate,
+            rate: detail.rating,
+            content: detail.content));
+  }
+
+  /// 精选
+  Widget _buildPlusCommentItems(BuildContext context, int index) {
+    var detail = _plusComments[index];
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12.0),
+        child: CommentWidget(
+            nick: detail.nickname,
+            ava: detail.headImg,
+            date: detail.commentDate,
+            rate: detail.rating,
+            content: detail.content));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_stillsList.length > 10) _stillsList.removeRange(10, _stillsList.length);
+
+    return BlocBuilder(
+        bloc: Application.themeBloc,
+        builder: (context, color) => Theme(
+            data: ThemeData(primarySwatch: color, iconTheme: IconThemeData(color: color)),
+            child: Scaffold(
+              appBar: _detail == null ? AppBar(title: Text(widget.movieName)) : null,
+              body: Container(
+                alignment: Alignment.center,
+                child: _detail == null
+                    ? CupertinoActivityIndicator(radius: 12.0)
+                    : CustomScrollView(
+                        slivers: <Widget>[
+                          /// 影片背景图片
+                          SliverAppBar(
+                              title: Text(_detail.basic.name),
+                              expandedHeight: 350.0,
+                              backgroundColor: color,
+                              flexibleSpace:
+                                  FlexibleSpaceBar(background: Image.network(_detail.basic.img, fit: BoxFit.cover)),
+                              pinned: true),
+
+                          ///
+                          MovieCategoryGuide(category: '演职员一览', color: color, guideAction: () {}),
+
+                          SliverPadding(
+                              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                              sliver: SliverToBoxAdapter(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text('导\n演', style: TextStyle(color: color, fontSize: 14.0)),
+                                    Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                        child: PersonIntroduce(
+                                            image: _detail.basic.director.img, name: _detail.basic.director.name))
+                                  ],
+                                ),
+                              )),
+
+                          SliverPadding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                            sliver: SliverToBoxAdapter(
+                              child: SingleChildScrollView(
+                                physics: BouncingScrollPhysics(),
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: List.generate(
+                                      _detail.basic.actors.length + 1, (index) => _buildActorItems(index, color)),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          ///
+                          MovieCategoryGuide(category: '剧情简介', color: color, guideAction: () {}),
+                          SliverPadding(
+                              padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 4.0, bottom: 4.0),
+                              sliver: SliverToBoxAdapter(
+                                  child: Text(_detail.basic.story, maxLines: 3, overflow: TextOverflow.ellipsis))),
+
+                          ///
+                          MovieCategoryGuide(category: '剧照', color: color, guideAction: () {}),
+                          MovieStillsWidget(stillsList: _stillsList),
+
+                          ///
+                          MovieCategoryGuide(category: '精选短评', color: color, guideAction: () {}),
+                          SliverPadding(
+                              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                              sliver: SliverList(
+                                  delegate: SliverChildBuilderDelegate(
+                                      (context, index) => _buildMiniCommentItems(context, index),
+                                      childCount: _miniComments.length))),
+
+                          ///
+                          MovieCategoryGuide(category: '精选影评', color: color, guideAction: () {}),
+                          SliverPadding(
+                              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                              sliver: SliverList(
+                                  delegate: SliverChildBuilderDelegate(
+                                      (context, index) => _buildPlusCommentItems(context, index),
+                                      childCount: _plusComments.length)))
+                        ],
+                      ),
+              ),
+            )));
+  }
+}
+
+/// 顶部分类导航
+class MovieCategoryGuide extends StatelessWidget {
+  final String category;
+  final String actionText;
+  final CategoryGuideAction guideAction;
+  final Color color;
+
+  MovieCategoryGuide({Key key, this.category, this.guideAction, this.color, this.actionText = '查看全部'})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: const EdgeInsets.only(left: 12.0, top: 12.0, right: 12.0, bottom: 4.0),
+      sliver: SliverToBoxAdapter(
+          child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(category, style: TextStyle(color: color, fontSize: 16.0)),
+          InkWell(
+              onTap: guideAction,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(actionText, style: TextStyle(color: color, fontSize: 16.0)),
+                  Icon(Icons.keyboard_arrow_right)
+                ],
+              ))
+        ],
+      )),
+    );
+  }
+}
+
+/// 人物简介
+class PersonIntroduce extends StatelessWidget {
+  final String image;
+  final String name;
+  final String desc;
+
+  PersonIntroduce({Key key, this.image, this.name, this.desc}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -134,20 +313,56 @@ class _MovieDetailState extends State<MovieDetail> {
                       Text(desc, style: TextStyle(color: Colors.grey, fontSize: 10.0), overflow: TextOverflow.ellipsis))
         ]);
   }
+}
 
-  Widget _buildActorItems(int index, Color color) {
-    var actor = index != 0 ? _detail.basic.actors[index - 1] : null;
-    return Container(
-        child: index == 0
-            ? Text('演\n员', style: TextStyle(color: color, fontSize: 14.0))
-            : Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: _buildPersonItem(actor.img, actor.name.isNotEmpty ? actor.name : actor.nameEn,
-                    actor.roleName.isNotEmpty ? '饰${actor.roleName}' : null),
-              ));
+/// 剧照
+class MovieStillsWidget extends StatelessWidget {
+  final List<MovieStills> stillsList;
+
+  MovieStillsWidget({Key key, this.stillsList}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+      sliver: SliverToBoxAdapter(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: List.generate(
+                stillsList.length,
+                (index) => GestureDetector(
+                    child: Container(
+                        height: 80.0,
+                        width: 60.0,
+                        child: CachedNetworkImage(
+                          imageUrl: stillsList[index].image,
+                          fit: BoxFit.scaleDown,
+                          placeholder: (context, string) => CupertinoActivityIndicator(),
+                          errorWidget: (context, string, e) => Image.asset(Resource.imageFail),
+                        )),
+                    onTap: () {})),
+          ),
+        ),
+      ),
+    );
   }
+}
 
-  Widget _buildComment(String nick, String ava, int date, double rate, String content) {
+/// 评论
+class CommentWidget extends StatelessWidget {
+  final String nick;
+  final String ava;
+  final int date;
+  final double rate;
+  final String content;
+
+  CommentWidget({Key key, this.nick, this.ava, this.date, this.rate, this.content}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       Container(
           width: 30.0,
@@ -169,207 +384,5 @@ class _MovieDetailState extends State<MovieDetail> {
                 Text(content)
               ])))
     ]);
-  }
-
-  Widget _buildMiniCommentItems(BuildContext context, int index) {
-    var detail = _miniComments[index];
-    return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12.0),
-        child: _buildComment(detail.nickname, detail.headImg, detail.commentDate, detail.rating, detail.content));
-  }
-
-  Widget _buildPlusCommentItems(BuildContext context, int index) {
-    var detail = _plusComments[index];
-    return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12.0),
-        child: _buildComment(detail.nickname, detail.headImg, detail.commentDate, detail.rating, detail.content));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_stillsList.length > 10) _stillsList.removeRange(10, _stillsList.length);
-
-    return BlocBuilder(
-        bloc: Application.themeBloc,
-        builder: (context, color) => Theme(
-            data: ThemeData(primarySwatch: color, iconTheme: IconThemeData(color: color)),
-            child: Scaffold(
-              appBar: _detail == null ? AppBar(title: Text(widget.movieName)) : null,
-              body: Container(
-                alignment: Alignment.center,
-                child: _detail == null
-                    ? CupertinoActivityIndicator(radius: 12.0)
-                    : CustomScrollView(
-                        slivers: <Widget>[
-                          ///
-                          SliverAppBar(
-                              title: Text(_detail.basic.name),
-                              expandedHeight: 350.0,
-                              backgroundColor: color,
-                              flexibleSpace:
-                                  FlexibleSpaceBar(background: Image.network(_detail.basic.img, fit: BoxFit.cover)),
-                              pinned: true),
-
-                          ///
-                          SliverPadding(
-                            padding: const EdgeInsets.only(top: 8.0, bottom: 4.0, left: 12.0, right: 12.0),
-                            sliver: SliverToBoxAdapter(
-                                child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text('演职员一览', style: TextStyle(color: color, fontSize: 16.0)),
-                                InkWell(
-                                    onTap: () {},
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text('查看全部', style: TextStyle(color: color, fontSize: 16.0)),
-                                        Icon(Icons.keyboard_arrow_right)
-                                      ],
-                                    ))
-                              ],
-                            )),
-                          ),
-
-                          ///
-                          SliverPadding(
-                              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                              sliver: SliverToBoxAdapter(
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text('导\n演', style: TextStyle(color: color, fontSize: 14.0)),
-                                    Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                        child: _buildPersonItem(
-                                            _detail.basic.director.img, _detail.basic.director.name, null))
-                                  ],
-                                ),
-                              )),
-
-                          ///
-                          SliverPadding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                            sliver: SliverToBoxAdapter(
-                              child: SingleChildScrollView(
-                                physics: BouncingScrollPhysics(),
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: List.generate(
-                                      _detail.basic.actors.length + 1, (index) => _buildActorItems(index, color)),
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          ///
-                          SliverPadding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                            sliver: SliverToBoxAdapter(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text('剧情简介', style: TextStyle(color: color, fontSize: 16.0)),
-                                  Padding(padding: const EdgeInsets.only(top: 4.0), child: Text(_detail.basic.story))
-                                ],
-                              ),
-                            ),
-                          ),
-
-                          ///
-                          SliverPadding(
-                            padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 4.0, top: 8.0),
-                            sliver:
-                                SliverToBoxAdapter(child: Text('剧照', style: TextStyle(color: color, fontSize: 16.0))),
-                          ),
-
-                          SliverPadding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                            sliver: SliverToBoxAdapter(
-                              child: SingleChildScrollView(
-                                physics: BouncingScrollPhysics(),
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: List.generate(
-                                      _stillsList.length,
-                                      (index) => GestureDetector(
-                                          child: Container(
-                                              height: 80.0,
-                                              width: 60.0,
-                                              child: CachedNetworkImage(
-                                                imageUrl: _stillsList[index].image,
-                                                fit: BoxFit.scaleDown,
-                                                placeholder: (context, string) => CupertinoActivityIndicator(),
-                                                errorWidget: (context, string, e) => Image.asset(Resource.imageFail),
-                                              )),
-                                          onTap: () {})),
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          ///
-                          SliverPadding(
-                            padding: const EdgeInsets.only(left: 12.0, top: 8.0, right: 12.0, bottom: 4.0),
-                            sliver: SliverToBoxAdapter(
-                                child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text('精选短评', style: TextStyle(color: color, fontSize: 16.0)),
-                                InkWell(
-                                    onTap: () {},
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text('查看全部', style: TextStyle(color: color, fontSize: 16.0)),
-                                        Icon(Icons.keyboard_arrow_right)
-                                      ],
-                                    ))
-                              ],
-                            )),
-                          ),
-
-                          SliverPadding(
-                              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                              sliver: SliverList(
-                                  delegate: SliverChildBuilderDelegate(
-                                      (context, index) => _buildMiniCommentItems(context, index),
-                                      childCount: _miniComments.length))),
-
-                          ///
-                          SliverPadding(
-                            padding: const EdgeInsets.only(left: 12.0, top: 8.0, right: 12.0, bottom: 4.0),
-                            sliver: SliverToBoxAdapter(
-                                child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text('精选影评', style: TextStyle(color: color, fontSize: 16.0)),
-                                InkWell(
-                                    onTap: () {},
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text('查看全部', style: TextStyle(color: color, fontSize: 16.0)),
-                                        Icon(Icons.keyboard_arrow_right)
-                                      ],
-                                    ))
-                              ],
-                            )),
-                          ),
-
-                          SliverPadding(
-                              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                              sliver: SliverList(
-                                  delegate: SliverChildBuilderDelegate(
-                                      (context, index) => _buildPlusCommentItems(context, index),
-                                      childCount: _plusComments.length)))
-                        ],
-                      ),
-              ),
-            )));
   }
 }

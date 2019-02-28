@@ -47,6 +47,7 @@ class _MovieComingPageState extends State<MovieComingPage> with AutomaticKeepAli
 
   @override
   void dispose() {
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -84,16 +85,6 @@ class _MovieComingPageState extends State<MovieComingPage> with AutomaticKeepAli
         : MovieComingsEntity.fromMap((response.data is String) ? json.decode(response.data) : response.data) ?? null;
   }
 
-  @override
-  void didUpdateWidget(MovieComingPage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
   Widget _buildMovieItem(BuildContext context, int index, Color color) {
     return Container(
         child: Padding(
@@ -127,66 +118,7 @@ class _MovieComingPageState extends State<MovieComingPage> with AutomaticKeepAli
     var act = movie.actor1.isEmpty && movie.actor2.isEmpty
         ? '暂无'
         : movie.actor1.isEmpty ? movie.actor2 : movie.actor2.isEmpty ? movie.actor1 : '${movie.actor1}/${movie.actor2}';
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        movie.image.isEmpty
-            ? Image.asset(Resource.imageFail, width: 70.0, height: 90.0, fit: BoxFit.contain)
-            : CachedNetworkImage(
-                imageUrl: movie.image,
-                width: 70.0,
-                height: 90.0,
-                fit: BoxFit.contain,
-                placeholder: (context, string) => Container(
-                    height: 90.0, width: 70.0, alignment: Alignment.center, child: CupertinoActivityIndicator()),
-                errorWidget: (context, string, e) => Container(
-                    height: 90.0, width: 70.0, alignment: Alignment.center, child: Image.asset(Resource.imageFail)),
-              ),
-        Expanded(
-            child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(movie.title,
-                  style: TextStyle(fontSize: 15.0, color: Colors.black87, fontWeight: FontWeight.bold),
-                  overflow: TextOverflow.ellipsis),
-              Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: Text('导演: ${movie.director.isEmpty ? '暂无' : movie.director}',
-                      style: TextStyle(fontSize: 10.0), overflow: TextOverflow.ellipsis)),
-              Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: Text('主演: $act', style: TextStyle(fontSize: 10.0), overflow: TextOverflow.ellipsis)),
-              Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: Text('分类: ${movie.type}', style: TextStyle(fontSize: 10.0), overflow: TextOverflow.ellipsis)),
-              Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child:
-                      Text('${movie.releaseDate}', style: TextStyle(fontSize: 10.0), overflow: TextOverflow.ellipsis))
-            ],
-          ),
-        )),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('${movie.wantedCount}人想看',
-                style: TextStyle(fontSize: 10.0, color: color), overflow: TextOverflow.ellipsis),
-            Padding(
-                padding: const EdgeInsets.only(top: 4.0),
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                      border: Border.all(width: 1.0, color: color)),
-                  child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
-                      child: Text('查看\n详情', style: TextStyle(fontSize: 12.0, color: color))),
-                ))
-          ],
-        )
-      ],
-    );
+    return ComingMovieWidget(movie: movie, act: act, color: color);
   }
 
   @override
@@ -221,5 +153,85 @@ class _MovieComingPageState extends State<MovieComingPage> with AutomaticKeepAli
                         _scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.decelerate);
                       }),
             )));
+  }
+}
+
+class ComingMovieWidget extends StatelessWidget {
+  final MovieInfo movie;
+  final String act;
+  final Color color;
+
+  ComingMovieWidget({Key key, @required this.movie, @required this.act, @required this.color}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        movie.image.isEmpty
+            ? Image.asset(Resource.imageFail, width: 70.0, height: 90.0, fit: BoxFit.contain)
+            : CachedNetworkImage(
+                imageUrl: movie.image,
+                width: 70.0,
+                height: 90.0,
+                fit: BoxFit.contain,
+                placeholder: (context, string) => Container(
+                    height: 90.0, width: 70.0, alignment: Alignment.center, child: CupertinoActivityIndicator()),
+                errorWidget: (context, string, e) => Container(
+                    height: 90.0, width: 70.0, alignment: Alignment.center, child: Image.asset(Resource.imageFail)),
+              ),
+        MovieIntroduce(movie: movie, act: act),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('${movie.wantedCount}人想看',
+                style: TextStyle(fontSize: 10.0, color: color), overflow: TextOverflow.ellipsis),
+            Padding(
+                padding: const EdgeInsets.only(top: 4.0),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                      border: Border.all(width: 1.0, color: color)),
+                  child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
+                      child: Text('查看\n详情', style: TextStyle(fontSize: 12.0, color: color))),
+                ))
+          ],
+        )
+      ],
+    );
+  }
+}
+
+class MovieIntroduce extends StatelessWidget {
+  final MovieInfo movie;
+  final String act;
+
+  MovieIntroduce({Key key, @required this.movie, @required this.act}) : super(key: key);
+
+  Widget _buildIntroduceContent(String content) {
+    return Padding(
+        padding: const EdgeInsets.only(top: 4.0),
+        child: Text(content, style: TextStyle(fontSize: 10.0), overflow: TextOverflow.ellipsis));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(movie.title,
+              style: TextStyle(fontSize: 15.0, color: Colors.black87, fontWeight: FontWeight.bold),
+              overflow: TextOverflow.ellipsis),
+          _buildIntroduceContent('导演: ${movie.director.isEmpty ? '暂无' : movie.director}'),
+          _buildIntroduceContent('主演: $act'),
+          _buildIntroduceContent('分类: ${movie.type}'),
+          _buildIntroduceContent('${movie.releaseDate}')
+        ],
+      ),
+    ));
   }
 }
