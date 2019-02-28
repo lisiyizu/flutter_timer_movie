@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
@@ -7,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_timer_movie/entities/movie_stills_entity.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'dart:convert';
 
 import '../application.dart';
 import '../entities/comment_entity.dart';
