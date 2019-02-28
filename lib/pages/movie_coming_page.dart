@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -78,7 +79,9 @@ class _MovieComingPageState extends State<MovieComingPage> with AutomaticKeepAli
 
   Future<MovieComingsEntity> _requestMovies(int locationId) async {
     Response response = await HttpUtils.instance.get(NetworkConfigs.movieComing, params: {'locationId': locationId});
-    return response == null ? null : MovieComingsEntity.fromMap(response.data) ?? null;
+    return response == null
+        ? null
+        : MovieComingsEntity.fromMap((response.data is String) ? json.decode(response.data) : response.data) ?? null;
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -74,7 +75,9 @@ class _MovieOnPageState extends State<MovieOnPage> with AutomaticKeepAliveClient
 
   Future<MovieOnEntity> _requestMovies(int locationId) async {
     Response response = await HttpUtils.instance.get(NetworkConfigs.movieOn, params: {'locationId': locationId});
-    return response == null ? null : MovieOnEntity.fromMap(response.data) ?? null;
+    return response == null
+        ? null
+        : MovieOnEntity.fromMap((response.data is String) ? json.decode(response.data) : response.data) ?? null;
   }
 
   Widget _buildMovieItem(BuildContext context, int index, Color color) {

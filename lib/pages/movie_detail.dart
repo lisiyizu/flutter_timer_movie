@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_timer_movie/entities/movie_stills_entity.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'dart:convert';
 
 import '../application.dart';
 import '../entities/comment_entity.dart';
@@ -28,12 +32,15 @@ class _MovieDetailState extends State<MovieDetail> {
   DetailBean _detail;
   var _miniComments = <MiniDetail>[];
   var _plusComments = <PlusDetail>[];
+  var _stillsList = <MovieStills>[];
 
   @override
   void initState() {
     super.initState();
     _requestDetail();
     _requestCommentDetail();
+    _requestStillsDetail();
+    _logger.log('movieId => ${widget.movieId}');
   }
 
   @override
@@ -66,15 +73,36 @@ class _MovieDetailState extends State<MovieDetail> {
     });
   }
 
+  _requestStillsDetail() async {
+    var stills = await _requestStills();
+    setState(() {
+      _stillsList.clear();
+      _stillsList.addAll(stills.images);
+    });
+  }
+
   Future<MovieDetailEntity> _requestMovie(int locationId) async {
     Response response = await HttpUtils.instance
         .get(NetworkConfigs.movieDetail, params: {'locationId': locationId, 'movieId': widget.movieId});
-    return response == null ? null : MovieDetailEntity.fromMap(response.data) ?? null;
+    return response == null
+        ? null
+        : MovieDetailEntity.fromMap((response.data is String) ? json.decode(response.data) : response.data) ?? null;
   }
 
   Future<CommentEntity> _requestComments() async {
     Response response = await HttpUtils.instance.get(NetworkConfigs.movieComment, params: {'movieId': widget.movieId});
-    return response == null ? null : CommentEntity.fromMap(response.data) ?? null;
+    return response == null
+        ? null
+        : CommentEntity.fromMap((response.data is String) ? json.decode(response.data) : response.data) ?? null;
+  }
+
+  Future<MovieStillsEntity> _requestStills() async {
+    Response response = await HttpUtils.instance.get(NetworkConfigs.movieStills, params: {'movieId': widget.movieId});
+
+    /// 后台返回数据的问题，解析前先通过 json.decode 解码
+    return response == null
+        ? null
+        : MovieStillsEntity.fromMap((response.data is String) ? json.decode(response.data) : response.data) ?? null;
   }
 
   Widget _buildPersonItem(String image, String name, String desc) {
@@ -159,6 +187,8 @@ class _MovieDetailState extends State<MovieDetail> {
 
   @override
   Widget build(BuildContext context) {
+    if (_stillsList.length > 10) _stillsList.removeRange(10, _stillsList.length);
+
     return BlocBuilder(
         bloc: Application.themeBloc,
         builder: (context, color) => Theme(
@@ -176,8 +206,8 @@ class _MovieDetailState extends State<MovieDetail> {
                               title: Text(_detail.basic.name),
                               expandedHeight: 350.0,
                               backgroundColor: color,
-                              flexibleSpace: FlexibleSpaceBar(
-                                  background: CachedNetworkImage(imageUrl: _detail.basic.img, fit: BoxFit.cover)),
+                              flexibleSpace:
+                                  FlexibleSpaceBar(background: Image.network(_detail.basic.img, fit: BoxFit.cover)),
                               pinned: true),
 
                           ///
@@ -243,6 +273,39 @@ class _MovieDetailState extends State<MovieDetail> {
                                   Text('剧情简介', style: TextStyle(color: color, fontSize: 16.0)),
                                   Padding(padding: const EdgeInsets.only(top: 4.0), child: Text(_detail.basic.story))
                                 ],
+                              ),
+                            ),
+                          ),
+
+                          ///
+                          SliverPadding(
+                            padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 4.0, top: 8.0),
+                            sliver:
+                                SliverToBoxAdapter(child: Text('剧照', style: TextStyle(color: color, fontSize: 16.0))),
+                          ),
+
+                          SliverPadding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                            sliver: SliverToBoxAdapter(
+                              child: SingleChildScrollView(
+                                physics: BouncingScrollPhysics(),
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: List.generate(
+                                      _stillsList.length,
+                                      (index) => GestureDetector(
+                                          child: Container(
+                                              height: 80.0,
+                                              width: 60.0,
+                                              child: CachedNetworkImage(
+                                                imageUrl: _stillsList[index].image,
+                                                fit: BoxFit.scaleDown,
+                                                placeholder: (context, string) => CupertinoActivityIndicator(),
+                                                errorWidget: (context, string, e) => Image.asset(Resource.imageFail),
+                                              )),
+                                          onTap: () {})),
+                                ),
                               ),
                             ),
                           ),
