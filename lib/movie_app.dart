@@ -4,17 +4,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'application.dart';
 import 'bloc/theme_bloc.dart';
-import 'locale/movie_localizations.dart';
+import 'locale/app_localizations.dart';
 import 'routers/routers.dart';
 import 'utils/preference_utils.dart';
 
-class MovieApp extends StatefulWidget {
-  @override
-  _MovieAppState createState() => _MovieAppState();
-}
-
-class _MovieAppState extends State<MovieApp> {
-  _MovieAppState() {
+class MovieApp extends StatelessWidget {
+  MovieApp() {
     final router = Router();
     Routers.configureRouters(router);
     Application.router = router;
@@ -35,9 +30,9 @@ class _MovieAppState extends State<MovieApp> {
       theme: ThemeData(primarySwatch: Colors.lightBlue),
       onGenerateRoute: Application.router.generator,
       localizationsDelegates: [
-        MovieLocalizationsDelegate.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
+        AppLocalizationsDelegate.delegate,
       ],
       supportedLocales: const <Locale>[const Locale('en', 'US'), const Locale('zh', 'CH')],
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_timer_movie/locale/app_localizations.dart';
 
 import '../application.dart';
 import '../pages/movie_coming_page.dart';
@@ -74,7 +75,7 @@ class _MoviePageState extends State<MoviePage> with SingleTickerProviderStateMix
                             ]),
                             onTap: () {}))
                   ],
-                  title: Text(widget.title,
+                  title: Text(AppLocalizations.of(context).text('home_title'),
                       style: TextStyle(
                         fontSize: 30.0,
                         fontFamily: Resource.fontFamilyDancingScript,

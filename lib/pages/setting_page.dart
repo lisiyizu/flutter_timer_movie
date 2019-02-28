@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../application.dart';
+import '../locale/app_localizations.dart';
 import '../resource.dart';
 import '../routers/routers.dart';
 
@@ -20,7 +21,7 @@ class SettingPage extends StatelessWidget {
         builder: (context, color) {
           return Scaffold(
             appBar: AppBar(
-                title: Text(title,
+                title: Text(AppLocalizations.of(context).text('home_title'),
                     style: TextStyle(
                       fontSize: 30.0,
                       fontFamily: Resource.fontFamilyDancingScript,
