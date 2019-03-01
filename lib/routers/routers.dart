@@ -8,6 +8,8 @@ class Routers {
   static var home = '/home';
   static var appTheme = '/app_theme';
   static var movieDetails = '/movie_details';
+  static var login = '/login';
+  static var register = '/register';
   static var _logger = Logger('Routers');
 
   static void configureRouters(Router router) {
@@ -24,6 +26,10 @@ class Routers {
     router.define(appTheme, handler: appThemeHandler);
     // movie detail
     router.define(movieDetails, handler: movieDetailHandler);
+    // login
+    router.define(login, handler: loginHandler);
+    // register
+    router.define(register, handler: registerHandler);
   }
 
   static String generateHomePath(String title) => '$home?title=$title';

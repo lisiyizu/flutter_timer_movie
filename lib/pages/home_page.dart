@@ -6,6 +6,7 @@ import '../application.dart';
 import '../locale/app_localizations.dart';
 import '../pages/movie_page.dart';
 import '../pages/setting_page.dart';
+import '../resource.dart';
 import '../utils/logger.dart';
 
 class HomePage extends StatefulWidget {
@@ -54,9 +55,10 @@ class _HomePageState extends State<HomePage> {
                 bottomNavigationBar: BottomNavigationBar(
                   items: [
                     BottomNavigationBarItem(
-                        icon: Icon(Icons.movie), title: Text(AppLocalizations.of(context).text('movie'))),
+                        icon: Icon(MovieIcons.movie), title: Text(AppLocalizations.of(context).text('movie'))),
                     BottomNavigationBarItem(
-                        icon: Icon(Icons.settings), title: Text(AppLocalizations.of(context).text('settings')))
+                        icon: Icon(MovieIcons.person_settings),
+                        title: Text(AppLocalizations.of(context).text('settings')))
                   ],
                   currentIndex: _index,
                   iconSize: 26.0,

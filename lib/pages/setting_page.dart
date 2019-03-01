@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,27 +21,46 @@ class SettingPage extends StatelessWidget {
     return BlocBuilder(
         bloc: Application.themeBloc,
         builder: (context, color) {
-          return Scaffold(
-            appBar: AppBar(
-                title: Text(AppLocalizations.of(context).text('home_title'),
-                    style: TextStyle(
-                      fontSize: 30.0,
-                      fontFamily: Resource.fontFamilyDancingScript,
-                    ))),
-            body: Container(
-              child: ListView(
-                children: <Widget>[
-                  SettingMenu(
-                      icon: Icons.color_lens,
-                      title: AppLocalizations.of(context).text('theme'),
-                      color: color,
-                      action: () {
-                        Application.router.navigateTo(context, Routers.appTheme, transition: TransitionType.fadeIn);
-                      })
-                ],
-              ),
-            ),
-          );
+          return BlocBuilder(
+              bloc: Application.loginBloc,
+              builder: (context, user) {
+                return Scaffold(
+                  appBar: AppBar(
+                      title: Text(AppLocalizations.of(context).text('home_title'),
+                          style: TextStyle(
+                            fontSize: 30.0,
+                            fontFamily: Resource.fontFamilyDancingScript,
+                          ))),
+                  body: Container(
+                    child: ListView(
+                      physics: NeverScrollableScrollPhysics(),
+                      children: <Widget>[
+                        InkWell(
+                            child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Hero(
+                                    tag: 'Avatar',
+                                    child: ClipOval(
+                                        child: user == null
+                                            ? Image.asset(Resource.imageAvaDefault, width: 80.0, height: 80.0)
+                                            : Image.file(File(user.avatarPath), width: 80.0, height: 80.0)))),
+                            onTap: () {
+                              Application.router
+                                  .navigateTo(context, '${Routers.login}', transition: TransitionType.fadeIn);
+                            }),
+                        SettingMenu(
+                            icon: MovieIcons.theme,
+                            title: AppLocalizations.of(context).text('theme'),
+                            color: color,
+                            action: () {
+                              Application.router
+                                  .navigateTo(context, Routers.appTheme, transition: TransitionType.fadeIn);
+                            })
+                      ],
+                    ),
+                  ),
+                );
+              });
         });
   }
 }

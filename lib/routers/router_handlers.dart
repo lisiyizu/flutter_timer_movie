@@ -1,14 +1,14 @@
 import 'package:fluro/fluro.dart';
+import 'package:flutter_timer_movie/pages/register_page.dart';
 
 import '../pages/home_page.dart';
+import '../pages/login_page.dart';
 import '../pages/movie_detail.dart';
 import '../pages/splash_page.dart';
 import '../pages/theme_page.dart';
 import '../utils/convert_utils.dart';
 
-var rootHandler = Handler(handlerFunc: (_, Map<String, List<String>> params) {
-  return SplashPage();
-});
+var rootHandler = Handler(handlerFunc: (_, __) => SplashPage());
 
 var homeHandler = Handler(handlerFunc: (_, Map<String, List<String>> params) {
   // 用于传递参数，在路径后面拼接参数 key 以及参数
@@ -17,12 +17,14 @@ var homeHandler = Handler(handlerFunc: (_, Map<String, List<String>> params) {
   return HomePage(title: title);
 });
 
-var appThemeHandler = Handler(handlerFunc: (_, Map<String, dynamic> params) {
-  return ThemePage();
-});
+var appThemeHandler = Handler(handlerFunc: (_, __) => ThemePage());
 
 var movieDetailHandler = Handler(handlerFunc: (_, Map<String, List<String>> params) {
   String id = params['movieId']?.first;
   String movieName = params['movieName']?.first;
   return MovieDetail(movieId: int.parse(id), movieName: ConvertUtils.fluroCnParamsDecode(movieName));
 });
+
+var loginHandler = Handler(handlerFunc: (_, __) => LoginPage());
+
+var registerHandler = Handler(handlerFunc: (_, __) => RegisterPage());

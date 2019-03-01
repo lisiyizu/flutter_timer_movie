@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'application.dart';
+import 'bloc/login_bloc.dart';
 import 'bloc/theme_bloc.dart';
 import 'locale/app_localizations.dart';
 import 'routers/routers.dart';
+import 'utils/database_utils.dart';
 import 'utils/preference_utils.dart';
 
 class MovieApp extends StatelessWidget {
@@ -13,13 +15,21 @@ class MovieApp extends StatelessWidget {
     final router = Router();
     Routers.configureRouters(router);
     Application.router = router;
-    _initThemeColor();
+    _initTheme();
+    _initUser();
   }
 
-  _initThemeColor() async {
+  _initTheme() async {
     int index = await PreferencesUtil.restoreInteger(Application.themeIndexKey, defaultValue: 0);
     var bloc = ThemeBloc(Application.themeColors[index]);
     Application.themeBloc = bloc;
+  }
+
+  _initUser() async {
+    var username = await PreferencesUtil.restoreString(Application.username, defaultValue: '');
+    var user = username.isEmpty ? null : await DatabaseUtil.instance.getUserByUsername(username);
+    var bloc = LoginBloc(user);
+    Application.loginBloc = bloc;
   }
 
   @override

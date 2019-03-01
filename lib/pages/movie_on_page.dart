@@ -120,7 +120,7 @@ class _MovieOnPageState extends State<MovieOnPage> with AutomaticKeepAliveClient
                   ? null
                   : FloatingActionButton(
                       mini: true,
-                      child: Icon(Icons.vertical_align_top),
+                      child: Icon(MovieIcons.back_top),
                       onPressed: () {
                         _scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.decelerate);
                       }),
