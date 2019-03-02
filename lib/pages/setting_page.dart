@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../application.dart';
+import '../bloc/login_bloc.dart';
 import '../locale/app_localizations.dart';
 import '../resource.dart';
 import '../routers/routers.dart';
@@ -20,46 +21,50 @@ class SettingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder(
         bloc: Application.themeBloc,
-        builder: (context, color) {
+        builder: (context, Color color) {
           return BlocBuilder(
               bloc: Application.loginBloc,
-              builder: (context, user) {
+              builder: (context, LoginState state) {
                 return Scaffold(
-                  appBar: AppBar(
-                      title: Text(AppLocalizations.of(context).text('home_title'),
-                          style: TextStyle(
-                            fontSize: 30.0,
-                            fontFamily: Resource.fontFamilyDancingScript,
-                          ))),
-                  body: Container(
-                    child: ListView(
+                    appBar: AppBar(
+                        title: Text(AppLocalizations.of(context).text('home_title'),
+                            style: TextStyle(
+                              fontSize: 30.0,
+                              fontFamily: Resource.fontFamilyDancingScript,
+                            ))),
+                    body: SingleChildScrollView(
                       physics: NeverScrollableScrollPhysics(),
-                      children: <Widget>[
-                        InkWell(
-                            child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Hero(
-                                    tag: 'Avatar',
-                                    child: ClipOval(
-                                        child: user == null
-                                            ? Image.asset(Resource.imageAvaDefault, width: 80.0, height: 80.0)
-                                            : Image.file(File(user.avatarPath), width: 80.0, height: 80.0)))),
-                            onTap: () {
-                              Application.router
-                                  .navigateTo(context, '${Routers.login}', transition: TransitionType.fadeIn);
-                            }),
-                        SettingMenu(
-                            icon: MovieIcons.theme,
-                            title: AppLocalizations.of(context).text('theme'),
-                            color: color,
-                            action: () {
-                              Application.router
-                                  .navigateTo(context, Routers.appTheme, transition: TransitionType.fadeIn);
-                            })
-                      ],
-                    ),
-                  ),
-                );
+                      child: Center(
+                        child: Column(
+                          children: <Widget>[
+                            InkWell(
+                                child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Hero(
+                                      tag: 'Avatar',
+                                      child: ClipOval(
+                                          child: state != null && state.avaPath.isEmpty
+                                              ? Image.file(File(state.avaPath),
+                                                  width: 80.0, height: 80.0, fit: BoxFit.cover)
+                                              : Image.asset(Resource.imageAvaDefault,
+                                                  width: 80.0, height: 80.0, fit: BoxFit.cover)),
+                                    )),
+                                onTap: () {
+                                  Application.router
+                                      .navigateTo(context, '${Routers.login}', transition: TransitionType.fadeIn);
+                                }),
+                            SettingMenu(
+                                icon: MovieIcons.theme,
+                                title: AppLocalizations.of(context).text('theme'),
+                                color: color,
+                                action: () {
+                                  Application.router
+                                      .navigateTo(context, Routers.appTheme, transition: TransitionType.fadeIn);
+                                })
+                          ],
+                        ),
+                      ),
+                    ));
               });
         });
   }

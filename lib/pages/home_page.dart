@@ -30,21 +30,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(HomePage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return BlocBuilder(
         bloc: Application.themeBloc,

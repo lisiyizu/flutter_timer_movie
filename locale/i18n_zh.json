@@ -9,6 +9,7 @@
   "login": "登录",
   "username": "用户名",
   "password": "密码",
+  "confirm_info": "重复密码",
   "username_hint": "请输入用户名",
   "password_hint": "请输入密码",
   "conform_hint": "请在输入一次密码",
@@ -23,5 +24,7 @@
   "user_has_exits": "当前用户名已存在",
   "from_camera": "拍照",
   "from_gallery": "相册",
-  "cancel": "取消"
+  "cancel": "取消",
+  "register_succeed": "注册成功",
+  "register_fail": "注册失败"
 }

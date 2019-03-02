@@ -28,7 +28,7 @@ class MovieApp extends StatelessWidget {
   _initUser() async {
     var username = await PreferencesUtil.restoreString(Application.username, defaultValue: '');
     var user = username.isEmpty ? null : await DatabaseUtil.instance.getUserByUsername(username);
-    var bloc = LoginBloc(user);
+    var bloc = LoginBloc(user == null ? null : LoginState(user.username, user.avatarPath));
     Application.loginBloc = bloc;
   }
 

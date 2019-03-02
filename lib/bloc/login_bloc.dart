@@ -1,32 +1,30 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
-import 'package:flutter_timer_movie/entities/user_entity.dart';
 
-import '../application.dart';
-import '../utils/database_utils.dart';
-import '../utils/preference_utils.dart';
+class LoginEvent {
+  LoginState state;
 
-enum LoginEvent { Login, LoginOut }
+  LoginEvent(this.state);
+}
 
-class LoginBloc extends Bloc<LoginEvent, User> {
-  User initUser;
+class LoginState {
+  String username;
+  String avaPath;
 
-  LoginBloc(this.initUser);
+  LoginState(this.username, this.avaPath);
+}
+
+class LoginBloc extends Bloc<LoginEvent, LoginState> {
+  LoginState initState;
+
+  LoginBloc(this.initState);
 
   @override
-  User get initialState => initUser;
+  LoginState get initialState => initState;
 
   @override
-  Stream<User> mapEventToState(User currentState, LoginEvent event) async* {
-    var username = await PreferencesUtil.restoreString(Application.username, defaultValue: '');
-    var user = username.isEmpty ? null : await DatabaseUtil.instance.getUserByUsername(username);
-
-    switch (event) {
-      case LoginEvent.Login:
-        yield user;
-        break;
-      case LoginEvent.LoginOut:
-        yield null;
-        break;
-    }
+  Stream<LoginState> mapEventToState(LoginState currentState, LoginEvent event) async* {
+    yield event.state;
   }
 }

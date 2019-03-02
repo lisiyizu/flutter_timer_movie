@@ -9,6 +9,7 @@
   "login": "Login",
   "username": "Username",
   "password": "Password",
+  "confirm_info": "Password Again",
   "username_hint": "Input username here",
   "password_hint": "Input password here",
   "conform_hint": "Input password again",
@@ -16,12 +17,14 @@
   "password_error": "Password length must larger than 6",
   "conform_error": "Passwords must be same",
   "login_succeed": "Login Succeed",
-  "login_fail": "Login Fail",
+  "login_fail": "Login Failed",
   "user_not_exits": "User not exits",
   "not_match": "Username and password not match",
   "register": "Register",
   "user_has_exits": "Username has exits, please select another one",
   "from_camera": "Take a photo",
   "from_gallery": "Select from gallery",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "register_succeed": "Register Succeed",
+  "register_fail": "Register Failed"
 }

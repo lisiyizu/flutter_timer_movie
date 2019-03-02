@@ -50,16 +50,6 @@ class _MoviePageState extends State<MoviePage> with SingleTickerProviderStateMix
   }
 
   @override
-  void didUpdateWidget(MoviePage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     var _tabTitle = [
       AppLocalizations.of(context).text('hot_casting'),

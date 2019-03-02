@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:fluro/fluro.dart';
@@ -11,6 +12,7 @@ import '../locale/app_localizations.dart';
 import '../resource.dart';
 import '../routers/routers.dart';
 import '../utils/database_utils.dart';
+import '../utils/preference_utils.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -35,9 +37,9 @@ class _LoginPageState extends State<LoginPage> {
         var value = _usernameController.text;
         if (value.isNotEmpty && value == _lastValue) {
           var user = await DatabaseUtil.instance.getUserByUsername(value);
-          setState(() => _avatar = user.avatarPath);
-        } else {
-          setState(() => _avatar = '');
+          if (user != null) {
+            setState(() => _avatar = user.avatarPath);
+          }
         }
       });
     });
@@ -66,8 +68,11 @@ class _LoginPageState extends State<LoginPage> {
         Fluttertoast.showToast(msg: AppLocalizations.of(context).text('user_not_exits'));
       } else if (id > 0) {
         Fluttertoast.showToast(msg: AppLocalizations.of(context).text('login_succeed'));
-        Application.loginBloc.dispatch(LoginEvent.Login);
-        Navigator.of(context).pop();
+        PreferencesUtil.saveString('username', username);
+        DatabaseUtil.instance.getUserByUsername(username).then((user) {
+          Application.loginBloc.dispatch(LoginEvent(LoginState(user.username, user.avatarPath)));
+          Navigator.of(context).pop();
+        });
       } else {
         Fluttertoast.showToast(msg: AppLocalizations.of(context).text('not_match'));
       }
@@ -107,8 +112,9 @@ class _LoginPageState extends State<LoginPage> {
                               tag: 'Avatar',
                               child: ClipOval(
                                   child: _avatar.isEmpty
-                                      ? Image.asset(Resource.imageAvaDefault, width: 80.0, height: 80.0)
-                                      : Image.file(File(_avatar), width: 80.0, height: 80.0))),
+                                      ? Image.asset(Resource.imageAvaDefault,
+                                          width: 80.0, height: 80.0, fit: BoxFit.cover)
+                                      : Image.file(File(_avatar), width: 80.0, height: 80.0, fit: BoxFit.cover))),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: Form(
@@ -118,26 +124,24 @@ class _LoginPageState extends State<LoginPage> {
                                 child: Column(
                                   children: <Widget>[
                                     TextFormField(
-                                      controller: _usernameController,
-                                      decoration: InputDecoration(
-                                          prefixIcon: Icon(Icons.person),
-                                          labelText: AppLocalizations.of(context).text('username'),
-                                          hintText: AppLocalizations.of(context).text('username_hint')),
-                                      validator: (value) => value.trim().isEmpty
-                                          ? AppLocalizations.of(context).text('username_error')
-                                          : null,
-                                    ),
+                                        controller: _usernameController,
+                                        decoration: InputDecoration(
+                                            prefixIcon: Icon(Icons.person),
+                                            labelText: AppLocalizations.of(context).text('username'),
+                                            hintText: AppLocalizations.of(context).text('username_hint')),
+                                        validator: (value) => value.trim().isEmpty
+                                            ? AppLocalizations.of(context).text('username_error')
+                                            : null),
                                     TextFormField(
-                                      obscureText: true,
-                                      controller: _passwordController,
-                                      decoration: InputDecoration(
-                                          prefixIcon: Icon(Icons.lock),
-                                          labelText: AppLocalizations.of(context).text('password'),
-                                          hintText: AppLocalizations.of(context).text('password_hint')),
-                                      validator: (value) => value.trim().length < 6
-                                          ? AppLocalizations.of(context).text('password_error')
-                                          : null,
-                                    ),
+                                        obscureText: true,
+                                        controller: _passwordController,
+                                        decoration: InputDecoration(
+                                            prefixIcon: Icon(Icons.lock),
+                                            labelText: AppLocalizations.of(context).text('password'),
+                                            hintText: AppLocalizations.of(context).text('password_hint')),
+                                        validator: (value) => value.trim().length < 6
+                                            ? AppLocalizations.of(context).text('password_error')
+                                            : null),
                                     Padding(
                                         padding: const EdgeInsets.symmetric(vertical: 12.0),
                                         child: Container(
