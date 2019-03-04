@@ -68,9 +68,9 @@ class _LoginPageState extends State<LoginPage> {
         Fluttertoast.showToast(msg: AppLocalizations.of(context).text('user_not_exits'));
       } else if (id > 0) {
         Fluttertoast.showToast(msg: AppLocalizations.of(context).text('login_succeed'));
-        PreferencesUtil.saveString('username', username);
+        PreferencesUtil.saveString(Application.username, username);
         DatabaseUtil.instance.getUserByUsername(username).then((user) {
-          Application.loginBloc.dispatch(LoginEvent(LoginState(user.username, user.avatarPath)));
+          Application.loginBloc.dispatch(LoginEvent(LoginState.login(user.username, user.avatarPath)));
           Navigator.of(context).pop();
         });
       } else {
@@ -94,6 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                 actions: <Widget>[
                   IconButton(
                       icon: Icon(MovieIcons.register),
+                      tooltip: AppLocalizations.of(context).text('register'),
                       onPressed: () {
                         Application.router.navigateTo(context, Routers.register, transition: TransitionType.fadeIn);
                       })

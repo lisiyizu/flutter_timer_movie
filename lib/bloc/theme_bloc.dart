@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_timer_movie/application.dart';
 
 class ThemeEvent {
   Color _themeColor;
@@ -12,12 +13,8 @@ class ThemeEvent {
 }
 
 class ThemeBloc extends Bloc<ThemeEvent, Color> {
-  Color initColor;
-
-  ThemeBloc(this.initColor);
-
   @override
-  Color get initialState => initColor;
+  Color get initialState => Application.themeColors[0];
 
   @override
   Stream<Color> mapEventToState(Color currentState, ThemeEvent event) async* {

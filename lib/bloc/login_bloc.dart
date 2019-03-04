@@ -11,17 +11,24 @@ class LoginEvent {
 class LoginState {
   String username;
   String avaPath;
+  bool hasLogin;
 
-  LoginState(this.username, this.avaPath);
+  LoginState(this.username, this.avaPath, this.hasLogin);
+
+  LoginState.empty()
+      : this.username = '',
+        this.avaPath = '',
+        this.hasLogin = false;
+
+  LoginState.login(String username, String avaPath)
+      : this.username = username,
+        this.avaPath = avaPath,
+        this.hasLogin = true;
 }
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginState initState;
-
-  LoginBloc(this.initState);
-
   @override
-  LoginState get initialState => initState;
+  LoginState get initialState => LoginState.empty();
 
   @override
   Stream<LoginState> mapEventToState(LoginState currentState, LoginEvent event) async* {

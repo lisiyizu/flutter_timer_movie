@@ -10,8 +10,16 @@ import 'routers/routers.dart';
 import 'utils/database_utils.dart';
 import 'utils/preference_utils.dart';
 
-class MovieApp extends StatelessWidget {
-  MovieApp() {
+class MovieApp extends StatefulWidget {
+  @override
+  _MovieAppState createState() => _MovieAppState();
+}
+
+class _MovieAppState extends State<MovieApp> {
+  @override
+  void initState() {
+    super.initState();
+
     final router = Router();
     Routers.configureRouters(router);
     Application.router = router;
@@ -19,17 +27,21 @@ class MovieApp extends StatelessWidget {
     _initUser();
   }
 
-  _initTheme() async {
-    int index = await PreferencesUtil.restoreInteger(Application.themeIndexKey, defaultValue: 0);
-    var bloc = ThemeBloc(Application.themeColors[index]);
-    Application.themeBloc = bloc;
+  _initTheme() {
+    Application.themeBloc = ThemeBloc();
+    PreferencesUtil.restoreInteger(Application.themeIndexKey, defaultValue: 0).then((index) {
+      Application.themeBloc.dispatch(ThemeEvent(Application.themeColors[index]));
+    });
   }
 
-  _initUser() async {
-    var username = await PreferencesUtil.restoreString(Application.username, defaultValue: '');
-    var user = username.isEmpty ? null : await DatabaseUtil.instance.getUserByUsername(username);
-    var bloc = LoginBloc(user == null ? null : LoginState(user.username, user.avatarPath));
-    Application.loginBloc = bloc;
+  _initUser() {
+    Application.loginBloc = LoginBloc();
+    PreferencesUtil.restoreString(Application.username, defaultValue: '').then((username) {
+      if (username.isNotEmpty)
+        DatabaseUtil.instance.getUserByUsername(username).then((user) {
+          Application.loginBloc.dispatch(LoginEvent(LoginState.login(user.username, user.avatarPath)));
+        });
+    });
   }
 
   @override
@@ -44,7 +56,7 @@ class MovieApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         AppLocalizationsDelegate.delegate,
       ],
-      supportedLocales: const <Locale>[const Locale('en', 'US'), const Locale('zh', 'CH')],
+      supportedLocales: const <Locale>[const Locale('en'), const Locale('zh')],
     );
   }
 }

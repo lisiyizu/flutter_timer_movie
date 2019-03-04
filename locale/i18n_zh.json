@@ -26,5 +26,6 @@
   "from_gallery": "相册",
   "cancel": "取消",
   "register_succeed": "注册成功",
-  "register_fail": "注册失败"
+  "register_fail": "注册失败",
+  "click_to_login": "点击头像登录"
 }

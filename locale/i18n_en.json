@@ -26,5 +26,6 @@
   "from_gallery": "Select from gallery",
   "cancel": "Cancel",
   "register_succeed": "Register Succeed",
-  "register_fail": "Register Failed"
+  "register_fail": "Register Failed",
+  "click_to_login": "Click avatar to login"
 }

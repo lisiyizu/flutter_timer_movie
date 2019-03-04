@@ -43,7 +43,7 @@ class SettingPage extends StatelessWidget {
                                     child: Hero(
                                       tag: 'Avatar',
                                       child: ClipOval(
-                                          child: state != null && state.avaPath.isEmpty
+                                          child: state.hasLogin && state.avaPath.isNotEmpty
                                               ? Image.file(File(state.avaPath),
                                                   width: 80.0, height: 80.0, fit: BoxFit.cover)
                                               : Image.asset(Resource.imageAvaDefault,
@@ -53,6 +53,8 @@ class SettingPage extends StatelessWidget {
                                   Application.router
                                       .navigateTo(context, '${Routers.login}', transition: TransitionType.fadeIn);
                                 }),
+                            Text(state.hasLogin ? state.username : AppLocalizations.of(context).text('click_to_login'),
+                                style: TextStyle(fontSize: state.hasLogin ? 24.0 : 18.0, color: color)),
                             SettingMenu(
                                 icon: MovieIcons.theme,
                                 title: AppLocalizations.of(context).text('theme'),
