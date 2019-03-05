@@ -2,6 +2,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter_timer_movie/pages/register_page.dart';
 
 import '../pages/home_page.dart';
+import '../pages/info_settings_page.dart';
 import '../pages/login_page.dart';
 import '../pages/movie_detail.dart';
 import '../pages/splash_page.dart';
@@ -28,3 +29,8 @@ var movieDetailHandler = Handler(handlerFunc: (_, Map<String, List<String>> para
 var loginHandler = Handler(handlerFunc: (_, __) => LoginPage());
 
 var registerHandler = Handler(handlerFunc: (_, __) => RegisterPage());
+
+var infoSettingsHandler = Handler(handlerFunc: (_, Map<String, List<String>> params) {
+  String username = params['username']?.first;
+  return InfoSettingsPage(username: username);
+});

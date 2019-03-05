@@ -24,6 +24,8 @@ class MovieIcons {
   static const IconData person_settings = MovieIconData(0xe63d);
   static const IconData change_pass = MovieIconData(0xe51d);
   static const IconData register = MovieIconData(0xe6b3);
+  static const IconData birthday = MovieIconData(0xe638);
+  static const IconData nickname = MovieIconData(0xe615);
 }
 
 class MovieIconData extends IconData {

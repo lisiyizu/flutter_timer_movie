@@ -27,5 +27,11 @@
   "cancel": "Cancel",
   "register_succeed": "Register Succeed",
   "register_fail": "Register Failed",
-  "click_to_login": "Click avatar to login"
+  "click_to_login": "Click avatar to login",
+  "personal_settings": "Personal Settings",
+  "gender": "Gender",
+  "birthday": "Birthday",
+  "unknown": "Unknown",
+  "gender_men": "Gentlemen",
+  "gender_women": "Lady"
 }

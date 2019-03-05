@@ -27,5 +27,11 @@
   "cancel": "取消",
   "register_succeed": "注册成功",
   "register_fail": "注册失败",
-  "click_to_login": "点击头像登录"
+  "click_to_login": "点击头像登录",
+  "personal_settings": "个人设置",
+  "gender": "性别",
+  "birthday": "生日",
+  "unknown": "未知",
+  "gender_men": "男",
+  "gender_women": "女"
 }

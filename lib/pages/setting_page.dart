@@ -50,8 +50,9 @@ class SettingPage extends StatelessWidget {
                                                   width: 80.0, height: 80.0, fit: BoxFit.cover)),
                                     )),
                                 onTap: () {
-                                  Application.router
-                                      .navigateTo(context, '${Routers.login}', transition: TransitionType.fadeIn);
+                                  Application.router.navigateTo(context,
+                                      '${state.hasLogin ? Routers.generateSettingPath(state.username) : Routers.login}',
+                                      transition: TransitionType.fadeIn);
                                 }),
                             Text(state.hasLogin ? state.username : AppLocalizations.of(context).text('click_to_login'),
                                 style: TextStyle(fontSize: state.hasLogin ? 24.0 : 18.0, color: color)),
@@ -90,7 +91,7 @@ class SettingMenu extends StatelessWidget {
           child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
               child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
-                Icon(icon, color: color, size: 28.0),
+                Icon(icon, color: color, size: 24.0),
                 Expanded(
                     child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),

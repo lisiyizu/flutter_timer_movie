@@ -10,6 +10,7 @@ class Routers {
   static var movieDetails = '/movie_details';
   static var login = '/login';
   static var register = '/register';
+  static var infoSettings = '/info_settings';
   static var _logger = Logger('Routers');
 
   static void configureRouters(Router router) {
@@ -30,9 +31,13 @@ class Routers {
     router.define(login, handler: loginHandler);
     // register
     router.define(register, handler: registerHandler);
+    // info settings
+    router.define(infoSettings, handler: infoSettingsHandler);
   }
 
   static String generateHomePath(String title) => '$home?title=$title';
 
   static String generateDetailPath(int id, String name) => '$movieDetails?movieId=$id&movieName=$name';
+
+  static String generateSettingPath(String username) => '$infoSettings?username=$username';
 }

@@ -169,8 +169,11 @@ class _MovieDetailState extends State<MovieDetail> {
                               title: Text(_detail.basic.name),
                               expandedHeight: 350.0,
                               backgroundColor: color,
-                              flexibleSpace:
-                                  FlexibleSpaceBar(background: Image.network(_detail.basic.img, fit: BoxFit.cover)),
+                              flexibleSpace: FlexibleSpaceBar(
+                                  background: CachedNetworkImage(
+                                      imageUrl: _detail.basic.img,
+                                      fit: BoxFit.cover,
+                                      width: MediaQuery.of(context).size.width)),
                               pinned: true),
 
                           ///
