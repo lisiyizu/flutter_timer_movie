@@ -5,6 +5,7 @@ import '../pages/home_page.dart';
 import '../pages/info_settings_page.dart';
 import '../pages/login_page.dart';
 import '../pages/movie_detail.dart';
+import '../pages/rename_page.dart';
 import '../pages/splash_page.dart';
 import '../pages/theme_page.dart';
 import '../utils/convert_utils.dart';
@@ -31,6 +32,11 @@ var loginHandler = Handler(handlerFunc: (_, __) => LoginPage());
 var registerHandler = Handler(handlerFunc: (_, __) => RegisterPage());
 
 var infoSettingsHandler = Handler(handlerFunc: (_, Map<String, List<String>> params) {
-  String username = params['username']?.first;
-  return InfoSettingsPage(username: username);
+  String id = params['user_id']?.first;
+  return InfoSettingsPage(userId: int.parse(id));
+});
+
+var renameHandler = Handler(handlerFunc: (_, Map<String, List<String>> params) {
+  String id = params['user_id']?.first;
+  return RenamePage(userId: int.parse(id));
 });

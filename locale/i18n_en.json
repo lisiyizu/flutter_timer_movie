@@ -33,5 +33,8 @@
   "birthday": "Birthday",
   "unknown": "Unknown",
   "gender_men": "Gentlemen",
-  "gender_women": "Lady"
+  "gender_women": "Lady",
+  "login_out": "Login out",
+  "rename": "Rename",
+  "save": "Save"
 }

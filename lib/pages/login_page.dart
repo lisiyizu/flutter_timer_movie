@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
         Fluttertoast.showToast(msg: AppLocalizations.of(context).text('login_succeed'));
         PreferencesUtil.saveString(Application.username, username);
         DatabaseUtil.instance.getUserByUsername(username).then((user) {
-          Application.loginBloc.dispatch(LoginEvent(LoginState.login(user.username, user.avatarPath)));
+          Application.loginBloc.dispatch(LoginEvent(LoginState.login(user.username, user.avatarPath, user.id)));
           Navigator.of(context).pop();
         });
       } else {

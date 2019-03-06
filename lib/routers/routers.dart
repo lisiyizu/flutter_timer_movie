@@ -11,6 +11,7 @@ class Routers {
   static var login = '/login';
   static var register = '/register';
   static var infoSettings = '/info_settings';
+  static var rename = '/info_rename';
   static var _logger = Logger('Routers');
 
   static void configureRouters(Router router) {
@@ -33,11 +34,15 @@ class Routers {
     router.define(register, handler: registerHandler);
     // info settings
     router.define(infoSettings, handler: infoSettingsHandler);
+    // rename
+    router.define(rename, handler: renameHandler);
   }
 
   static String generateHomePath(String title) => '$home?title=$title';
 
   static String generateDetailPath(int id, String name) => '$movieDetails?movieId=$id&movieName=$name';
 
-  static String generateSettingPath(String username) => '$infoSettings?username=$username';
+  static String generateSettingPath(int userId) => '$infoSettings?user_id=$userId';
+
+  static String generateRenamePath(int userId) => '$rename?user_id=$userId';
 }

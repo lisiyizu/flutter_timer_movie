@@ -12,17 +12,20 @@ class LoginState {
   String username;
   String avaPath;
   bool hasLogin;
+  int userId;
 
-  LoginState(this.username, this.avaPath, this.hasLogin);
+  LoginState(this.username, this.avaPath, this.hasLogin, this.userId);
 
   LoginState.empty()
       : this.username = '',
         this.avaPath = '',
-        this.hasLogin = false;
+        this.hasLogin = false,
+        this.userId = -1;
 
-  LoginState.login(String username, String avaPath)
+  LoginState.login(String username, String avaPath, int userId)
       : this.username = username,
         this.avaPath = avaPath,
+        this.userId = userId,
         this.hasLogin = true;
 }
 

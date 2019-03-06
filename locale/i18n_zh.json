@@ -33,5 +33,8 @@
   "birthday": "生日",
   "unknown": "未知",
   "gender_men": "男",
-  "gender_women": "女"
+  "gender_women": "女",
+  "login_out": "退出登录",
+  "rename": "修改昵称",
+  "save": "保存"
 }

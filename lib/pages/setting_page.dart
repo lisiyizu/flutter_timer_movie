@@ -9,6 +9,7 @@ import '../bloc/login_bloc.dart';
 import '../locale/app_localizations.dart';
 import '../resource.dart';
 import '../routers/routers.dart';
+import '../utils/preference_utils.dart';
 
 typedef void MenuAction();
 
@@ -50,9 +51,18 @@ class SettingPage extends StatelessWidget {
                                                   width: 80.0, height: 80.0, fit: BoxFit.cover)),
                                     )),
                                 onTap: () {
-                                  Application.router.navigateTo(context,
-                                      '${state.hasLogin ? Routers.generateSettingPath(state.username) : Routers.login}',
-                                      transition: TransitionType.fadeIn);
+                                  Application.router
+                                      .navigateTo(context,
+                                          '${state.hasLogin ? Routers.generateSettingPath(state.userId) : Routers.login}',
+                                          transition: TransitionType.fadeIn)
+                                      .then((v) {
+                                    if (v != null && v) {
+                                      Application.router
+                                          .navigateTo(context, Routers.login, transition: TransitionType.fadeIn);
+                                      PreferencesUtil.saveString(Application.username, '');
+                                      Application.loginBloc.dispatch(LoginEvent(LoginState.empty()));
+                                    }
+                                  });
                                 }),
                             Text(state.hasLogin ? state.username : AppLocalizations.of(context).text('click_to_login'),
                                 style: TextStyle(fontSize: state.hasLogin ? 24.0 : 18.0, color: color)),

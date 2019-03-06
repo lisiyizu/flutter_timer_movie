@@ -82,6 +82,12 @@ class DatabaseUtil {
       return null;
   }
 
+  Future<String> getAvaPath(int uid) async {
+    var db = await database;
+    var list = await db.rawQuery('SELECT avatar_path FROM ${Constant.USER_TABLE_NAME} WHERE id = ?', [uid]);
+    return list.isNotEmpty ? list[0]['avatar_path'] : '';
+  }
+
   Future<User> getUserById(int id) async {
     var db = await database;
     var list = await db.rawQuery(

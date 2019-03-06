@@ -1,20 +1,25 @@
 import 'dart:io';
 
+import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../application.dart';
+import '../bloc/login_bloc.dart';
 import '../entities/user_entity.dart';
 import '../locale/app_localizations.dart';
 import '../pages/setting_page.dart';
 import '../resource.dart';
+import '../routers/routers.dart';
 import '../utils/database_utils.dart';
+import '../utils/preference_utils.dart';
 
 class InfoSettingsPage extends StatefulWidget {
-  final String username;
+  final int userId;
 
-  InfoSettingsPage({Key key, @required this.username}) : super(key: key);
+  InfoSettingsPage({Key key, @required this.userId}) : super(key: key);
 
   @override
   _InfoSettingsPageState createState() => _InfoSettingsPageState();
@@ -22,6 +27,7 @@ class InfoSettingsPage extends StatefulWidget {
 
 class _InfoSettingsPageState extends State<InfoSettingsPage> {
   User user;
+  var _currentAva = '';
 
   @override
   void initState() {
@@ -30,8 +36,15 @@ class _InfoSettingsPageState extends State<InfoSettingsPage> {
   }
 
   _initUser() async {
-    var temp = await DatabaseUtil.instance.getUserByUsername(widget.username);
-    setState(() => user = temp);
+    var temp = await DatabaseUtil.instance.getUserById(widget.userId);
+    var fileExits = await File(temp.avatarPath).exists();
+    setState(() {
+      user = temp;
+      if (fileExits) {
+        _currentAva = temp.avatarPath;
+      } else
+        _currentAva = '';
+    });
   }
 
   @override
@@ -45,6 +58,64 @@ class _InfoSettingsPageState extends State<InfoSettingsPage> {
         setState(() => user = temp);
       });
     });
+  }
+
+  void _selectImage() async {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => Container(
+              alignment: Alignment.center,
+              height: 122.0,
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  InkWell(
+                      child: Container(
+                          alignment: Alignment.center,
+                          height: 40.0,
+                          width: MediaQuery.of(context).size.width,
+                          child: Text(AppLocalizations.of(context).text('from_camera'))),
+                      onTap: () async {
+                        var image = await ImagePicker.pickImage(source: ImageSource.camera);
+                        setState(() {
+                          if (image != null) {
+                            _currentAva = image.absolute.path;
+                            DatabaseUtil.instance.updateAvatar(user.id, _currentAva);
+                          }
+                        });
+                        Navigator.of(context).pop();
+                      }),
+                  Divider(height: 1.0, color: Theme.of(context).primaryColorDark),
+                  InkWell(
+                      child: Container(
+                          alignment: Alignment.center,
+                          height: 40.0,
+                          width: MediaQuery.of(context).size.width,
+                          child: Text(AppLocalizations.of(context).text('from_gallery'))),
+                      onTap: () async {
+                        var image = await ImagePicker.pickVideo(source: ImageSource.gallery);
+                        setState(() {
+                          if (image != null) {
+                            _currentAva = image.absolute.path;
+                            DatabaseUtil.instance.updateAvatar(user.id, _currentAva);
+                          }
+                        });
+                        Navigator.of(context).pop();
+                      }),
+                  Divider(height: 1.0, color: Theme.of(context).primaryColorDark),
+                  InkWell(
+                      child: Container(
+                          alignment: Alignment.center,
+                          height: 40.0,
+                          width: MediaQuery.of(context).size.width,
+                          child: Text(AppLocalizations.of(context).text('cancel'))),
+                      onTap: () {
+                        Navigator.pop(context);
+                      }),
+                ],
+              ),
+            ));
   }
 
   @override
@@ -64,7 +135,7 @@ class _InfoSettingsPageState extends State<InfoSettingsPage> {
               ),
               body: Container(
                   child: user == null
-                      ? CupertinoActivityIndicator(radius: 12.0)
+                      ? Container(alignment: Alignment.center, child: CupertinoActivityIndicator(radius: 12.0))
                       : SingleChildScrollView(
                           child: Column(
                             children: <Widget>[
@@ -74,19 +145,26 @@ class _InfoSettingsPageState extends State<InfoSettingsPage> {
                                       child: Hero(
                                         tag: 'Avatar',
                                         child: ClipOval(
-                                            child: user.avatarPath.isEmpty
+                                            child: _currentAva.isEmpty
                                                 ? Image.asset(Resource.imageAvaDefault,
                                                     width: 80.0, height: 80.0, fit: BoxFit.cover)
-                                                : Image.file(File(user.avatarPath),
+                                                : Image.file(File(_currentAva),
                                                     width: 80.0, height: 80.0, fit: BoxFit.cover)),
                                       )),
-                                  onTap: () {}),
+                                  onTap: _selectImage),
                               PersonalActionMenu(
                                   icon: MovieIcons.nickname,
                                   title: AppLocalizations.of(context).text('username'),
                                   color: color,
-                                  value: widget.username,
-                                  action: () {}),
+                                  value: user.username,
+                                  action: () {
+                                    Application.router
+                                        .navigateTo(context, Routers.generateRenamePath(widget.userId),
+                                            transition: TransitionType.fadeIn)
+                                        .then((v) {
+                                      if (v) Navigator.of(context).pop(true);
+                                    });
+                                  }),
                               PersonalActionMenu(
                                   icon: MovieIcons.gender,
                                   title: AppLocalizations.of(context).text('gender'),
@@ -144,14 +222,14 @@ class _InfoSettingsPageState extends State<InfoSettingsPage> {
                                                         },
                                                         initialDateTime: DateTime.now(),
                                                         minimumDate: DateTime(1900),
-                                                        maximumDate: DateTime(2099, 12, 31),
+                                                        maximumDate: DateTime.now(),
                                                       ))),
                                                 ))
                                         : showDatePicker(
                                                 context: context,
                                                 initialDate: DateTime.now(),
                                                 firstDate: DateTime(1900),
-                                                lastDate: DateTime(2099, 12, 31))
+                                                lastDate: DateTime.now())
                                             .then((date) {
                                             _updateBirthday(date);
                                           });
@@ -161,7 +239,17 @@ class _InfoSettingsPageState extends State<InfoSettingsPage> {
                                   title: AppLocalizations.of(context).text('password'),
                                   color: color,
                                   value: '',
-                                  action: () {})
+                                  action: () {}),
+                              PersonalActionMenu(
+                                  icon: MovieIcons.login_out,
+                                  title: AppLocalizations.of(context).text("login_out"),
+                                  color: color,
+                                  value: '',
+                                  action: () {
+                                    PreferencesUtil.saveString(Application.username, '');
+                                    Application.loginBloc.dispatch(LoginEvent(LoginState.empty()));
+                                    Navigator.of(context).pop();
+                                  })
                             ],
                           ),
                         )),

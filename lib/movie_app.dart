@@ -39,7 +39,7 @@ class _MovieAppState extends State<MovieApp> {
     PreferencesUtil.restoreString(Application.username, defaultValue: '').then((username) {
       if (username.isNotEmpty)
         DatabaseUtil.instance.getUserByUsername(username).then((user) {
-          Application.loginBloc.dispatch(LoginEvent(LoginState.login(user.username, user.avatarPath)));
+          Application.loginBloc.dispatch(LoginEvent(LoginState.login(user.username, user.avatarPath, user.id)));
         });
     });
   }
