@@ -36,5 +36,18 @@
   "gender_women": "女",
   "login_out": "退出登录",
   "rename": "修改昵称",
-  "save": "保存"
+  "save": "保存",
+  "change_pass": "修改密码",
+  "old_pass": "旧密码",
+  "new_pass": "新密码",
+  "new_pass_confirm": "确认密码",
+  "old_pass_hint": "输入旧密码",
+  "new_pass_hint": "输入需要修改的新密码",
+  "new_pass_confirm_hint": "再次确认需要修改的密码",
+  "old_pass_error": "输入的旧密码有误",
+  "modify_succeed": "修改成功",
+  "modify_failed": "修改失败啦~",
+  "exit_content": "是否退出当前App",
+  "positive_button_hint": "是",
+  "negative_button_hint": "否"
 }

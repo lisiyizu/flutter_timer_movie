@@ -239,7 +239,14 @@ class _InfoSettingsPageState extends State<InfoSettingsPage> {
                                   title: AppLocalizations.of(context).text('password'),
                                   color: color,
                                   value: '',
-                                  action: () {}),
+                                  action: () {
+                                    Application.router
+                                        .navigateTo(context, Routers.generateModifyPassPath(widget.userId),
+                                            transition: TransitionType.fadeIn)
+                                        .then((v) {
+                                      if (v != null && v) Navigator.of(context).pop(true);
+                                    });
+                                  }),
                               PersonalActionMenu(
                                   icon: MovieIcons.login_out,
                                   title: AppLocalizations.of(context).text("login_out"),
@@ -271,7 +278,10 @@ class PersonalActionMenu extends StatelessWidget {
       @required this.color,
       @required this.value,
       @required this.action})
-      : super(key: key);
+      : assert(icon != null),
+        assert(title != null),
+        assert(color != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {

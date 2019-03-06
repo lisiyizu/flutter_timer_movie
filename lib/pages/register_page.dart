@@ -160,7 +160,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       obscureText: true,
                                       controller: _passwordController,
                                       decoration: InputDecoration(
-                                          prefixIcon: Icon(Icons.lock),
+                                          prefixIcon: Icon(Icons.lock_outline),
                                           labelText: AppLocalizations.of(context).text('password'),
                                           hintText: AppLocalizations.of(context).text('password_hint')),
                                       validator: (value) => value.trim().length < 6

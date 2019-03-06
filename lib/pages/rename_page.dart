@@ -54,6 +54,7 @@ class _RenamePageState extends State<RenamePage> {
           Fluttertoast.showToast(msg: AppLocalizations.of(context).text('user_has_exits'));
           setState(() => _textController.text = '');
         } else {
+          FocusScope.of(context).requestFocus(FocusNode());
           DatabaseUtil.instance.updateUsername(widget.userId, newNick);
           Navigator.of(context).pop(true);
         }

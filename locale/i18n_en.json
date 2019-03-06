@@ -1,5 +1,5 @@
 {
-  "home_title": "Timer",
+  "home_title": "Timer Movies",
   "movie": "Movie",
   "settings": "Settings",
   "hot_casting": "HotCasting",
@@ -36,5 +36,18 @@
   "gender_women": "Lady",
   "login_out": "Login out",
   "rename": "Rename",
-  "save": "Save"
+  "save": "Save",
+  "change_pass": "Modify Password",
+  "old_pass": "Old Password",
+  "new_pass": "New Password",
+  "new_pass_confirm": "New Password Again",
+  "old_pass_hint": "Input your old password here",
+  "new_pass_hint": "Input your new password here",
+  "new_pass_confirm_hint": "Confirm your new password again",
+  "old_pass_error": "Your old password not match",
+  "modify_succeed": "Modify Succeed",
+  "modify_failed": "Modify Failed",
+  "exit_content": "Do you want exit",
+  "positive_button_hint": "Yes",
+  "negative_button_hint": "No"
 }

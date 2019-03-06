@@ -4,6 +4,7 @@ import 'package:flutter_timer_movie/pages/register_page.dart';
 import '../pages/home_page.dart';
 import '../pages/info_settings_page.dart';
 import '../pages/login_page.dart';
+import '../pages/modify_password_page.dart';
 import '../pages/movie_detail.dart';
 import '../pages/rename_page.dart';
 import '../pages/splash_page.dart';
@@ -39,4 +40,9 @@ var infoSettingsHandler = Handler(handlerFunc: (_, Map<String, List<String>> par
 var renameHandler = Handler(handlerFunc: (_, Map<String, List<String>> params) {
   String id = params['user_id']?.first;
   return RenamePage(userId: int.parse(id));
+});
+
+var modifyPasswordHandler = Handler(handlerFunc: (_, Map<String, List<String>> params) {
+  String id = params['user_id']?.first;
+  return ModifyPasswordPage(userId: int.parse(id));
 });
